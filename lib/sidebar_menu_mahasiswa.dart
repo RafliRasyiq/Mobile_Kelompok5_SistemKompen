@@ -54,15 +54,15 @@ class SidebarMenu extends StatelessWidget {
                   leading: const Icon(Icons.assignment,
                       color: Colors.white), 
                   title: const Text(
-                    'Status dan Penugasan',
+                    'Tugas',
                     style: TextStyle(color: Colors.white),
                   ),
                   children: [
                     ListTile(
-                      leading: const Icon(Icons.add,
+                      leading: const Icon(Icons.assignment,
                           color: Colors.white),
                       title: const Text(
-                        'Tambah Tugas',
+                        'Daftar Tugas',
                         style: TextStyle(color: Colors.white),
                       ),
                       onTap: () {
@@ -73,7 +73,7 @@ class SidebarMenu extends StatelessWidget {
                       leading: const Icon(Icons.work,
                           color: Colors.white),
                       title: const Text(
-                        'Proses pengerjaan',
+                        'Sedang Berjalan',
                         style: TextStyle(color: Colors.white),
                       ),
                       onTap: () {
@@ -84,7 +84,7 @@ class SidebarMenu extends StatelessWidget {
                       leading: const Icon(Icons.check,
                           color: Colors.white),
                       title: const Text(
-                        'Persetujuan Tugas',
+                        'Riwayat Tugas',
                         style: TextStyle(color: Colors.white),
                       ),
                       onTap: () {
@@ -102,18 +102,19 @@ class SidebarMenu extends StatelessWidget {
                         
                       },
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.rate_review,
-                          color: Colors.white),
-                      title: const Text(
-                        'Proses Peninjauan',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onTap: () {
-                        
-                      },
-                    ),
                   ],
+                ),
+                ListTile(
+                  leading: const Icon(Icons.home,
+                      color: Colors.white),
+                  title: const Text(
+                    'Pengajuan Surat',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context,
+                    '/homepage');
+                  },
                 ),
               ],
             ),

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 import 'package:sistem_kompen/sidebar_menu_dosen.dart';
 
@@ -21,11 +23,39 @@ class HomePageDosen extends StatelessWidget {
           },
         ),
         actions: [
-          IconButton(
+          PopupMenuButton<int>(
             icon: const Icon(Icons.person, color: Colors.white),
-            onPressed: () {
-              // Handle profile button press
-            },
+            onSelected: (item) => onSelected(context, item),
+            itemBuilder: (context) => [
+              PopupMenuItem<int>(
+                value: 0,
+                child: ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text('Rikat Setya Gusti\n2241760053'),
+                ),
+              ),
+              PopupMenuDivider(),
+              PopupMenuItem<int>(
+                value: 1,
+                child: Row(
+                  children: [
+                    Icon(Icons.menu_book, color: Colors.black),
+                    const SizedBox(width: 15),
+                    Text('Profile'),
+                  ],
+                ),
+              ),
+              PopupMenuItem<int>(
+                value: 2,
+                child: Row(
+                  children: [
+                    Icon(Icons.logout, color: Colors.black),
+                    const SizedBox(width: 15),
+                    Text('Logout'),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -161,7 +191,7 @@ class HomePageDosen extends StatelessWidget {
             Center(
               child: TextButton(
                 onPressed: () {
-                  // Handle view more press
+                  Navigator.pushReplacementNamed(context, '/notifikasi');
                 },
                 child: const Text('Lihat Semua >>'),
               ),
@@ -200,6 +230,16 @@ class HomePageDosen extends StatelessWidget {
         ),
       ],
     );
+  }
+  onSelected(BuildContext context, int item) {
+    switch (item) {
+      case 1:
+        // Handle Profile action
+        break;
+      case 2:
+        // Handle Logout action
+        break;
+    }
   }
 }
 
