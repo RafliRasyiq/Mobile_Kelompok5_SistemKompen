@@ -7,7 +7,7 @@ class NotificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF7D669E), // Purple background color as in the image
+        backgroundColor: Color(0xFF8278AB), // Purple background color as in the image
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -39,7 +39,7 @@ class NotificationPage extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0xFF7D669E),
+                  Color(0xFF8278AB),
                   Colors.white,
                 ],
                 stops: [0.5, 0.5],
