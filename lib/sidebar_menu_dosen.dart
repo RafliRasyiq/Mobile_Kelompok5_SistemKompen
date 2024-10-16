@@ -113,6 +113,29 @@ class SidebarMenu extends StatelessWidget {
                         
                       },
                     ),
+                    ListTile(
+                      leading: const Icon(Icons.rate_review,
+                          color: Colors.white),
+                      title: const Text(
+                        'Terima Mahasiswa',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        Navigator.pushReplacementNamed(context,
+                    '/terimamahasiswa');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.rate_review,
+                          color: Colors.white),
+                      title: const Text(
+                        'Daftar Mahasiswa',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        
+                      },
+                    ),
                   ],
                 ),
               ],
