@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sistem_kompen/screens/KelolaKompen.dart';
+import 'package:sistem_kompen/screens/PengajuanSurat.dart';
 import 'package:sistem_kompen/screens/profile_screen/profile_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => ProfileScreen()),
+        MaterialPageRoute(builder: (context) => PengajuanSuratScreen()),
       );
     });
   }
@@ -31,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
           double screenWidth = MediaQuery.of(context).size.width;
 
           // Set ukuran logo minimal 200 dan maksimal sebesar 60% dari lebar layar
-          double logoWidth = screenWidth * 0.6;
+          double logoWidth = screenWidth * 0.8;
           if (logoWidth < 200) {
             logoWidth = 200;
           }
