@@ -5,6 +5,8 @@ import 'package:sistem_kompen/screens/profile_screen/widgets/profile_container_w
 import 'package:sistem_kompen/utils/colors_helper.dart';
 import 'package:sistem_kompen/utils/images.dart';
 import 'package:sistem_kompen/widgets/custom_text.dart';
+import 'package:sistem_kompen/screens/KelolaKompen.dart'; // Import the KelolaKompen screen
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -32,6 +34,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           onPressed: () {
             // Action for back button
+              Navigator.push(
+              context,
+              MaterialPageRoute(
+              builder: (context) => KelolaKompen(),
+               ),
+            );
           },
         ),
       ),

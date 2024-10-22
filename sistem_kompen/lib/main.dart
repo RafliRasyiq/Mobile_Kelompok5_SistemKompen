@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sistem_kompen/screens/profile_screen/profile_screen.dart';
+import 'package:sistem_kompen/screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,14 +38,14 @@ class MyAppState extends State<MyApp> {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Friendzy',
+          title: 'Sistem Kompen',
           theme: ThemeData(
             appBarTheme: const AppBarTheme(
               systemOverlayStyle: SystemUiOverlayStyle.dark,
             ),
             primarySwatch: Colors.purple,
           ),
-          home: const ProfileScreen(),
+          home: const SplashScreen(),
         );
       },
     );
