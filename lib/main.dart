@@ -5,6 +5,7 @@ import 'package:sistem_kompen/homepage_mahasiswa.dart';
 import 'package:sistem_kompen/sidebar_menu_mahasiswa.dart';
 import 'package:sistem_kompen/notifikasi.dart';
 import 'package:sistem_kompen/terima_mahasiswa.dart';
+import 'package:sistem_kompen/kelola_kompen.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePageMHS(),
+      home: data_tes(),
       // home: HomePageDosen(),
       routes: {
         '/sidebar' : (context)=>SidebarMenu(),
