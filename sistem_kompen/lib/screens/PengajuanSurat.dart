@@ -10,7 +10,7 @@ class PengajuanSuratScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Pengajuan Surat',
+          'Pengajuan Surat Bagus',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w600,
