@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 final dio = Dio();
 // var user_data;
 Map<String, dynamic> user_data = {
+  'mahasiswa_id': '',
   'username': '',
   'mahasiswa_nama': '',
   'nim': '',
   'jurusan': '',
   'prodi': '',
   'kelas': '',
-  'no_telp': ''
+  'no_telp': '',
+  'password': ''
 };
 final TextEditingController idController = TextEditingController();
 final TextEditingController nameController = TextEditingController();
@@ -19,10 +21,10 @@ final TextEditingController phoneController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 final TextEditingController confirmPasswordController = TextEditingController();
 
-String url_domain = "http://192.168.1.4:8000/";
+String url_domain = "http://192.168.67.200:8000/";
 String url_user_data = url_domain + "api/user_data/1";
 String url_update_data = url_domain + "api/edit_data";
-String url_delete_data = url_domain + "api/delete_data";
+String url_update_pass = url_domain + "api/edit_pass";
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -106,11 +108,20 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                 value: user_data['no_telp']?.toString() ?? ""),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => _showEditProfileDialog(context),
+              onPressed: () {
+                idController.text = user_data['mahasiswa_id'].toString();
+                nameController.text = user_data['mahasiswa_nama'];
+                usernameController.text = user_data['username'];
+                phoneController.text = user_data['no_telp'].toString();
+                _showEditProfileDialog(context);
+              },
               child: Text("Ubah Profil"),
             ),
             ElevatedButton(
-              onPressed: () => _showEditPasswordDialog(context),
+              onPressed: () {
+                idController.text = user_data['mahasiswa_id'].toString();
+                _showEditPasswordDialog(context);
+              },
               child: Text("Ubah Password"),
             ),
             ElevatedButton(
@@ -200,8 +211,18 @@ class EditProfileDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            // Save profile changes logic here
-            Navigator.of(context).pop();
+            print("object");
+            if (idController == "" ||
+                usernameController == "" ||
+                nameController == "" ||
+                phoneController == "") {
+              print("zero");
+            } else {
+              updateProfileData(idController.text, usernameController.text,
+                  nameController.text, phoneController.text);
+              Navigator.of(context).pop();
+              AppLifecycleState.resumed;
+            }
           },
           child: Text("Ubah"),
         ),
@@ -241,8 +262,15 @@ class EditPasswordDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            // Save new password logic here
-            Navigator.of(context).pop();
+            print("object");
+            if (idController == "" ||
+                passwordController == "") {
+              print("zero");
+            } else {
+              updatePassword(idController.text, passwordController.text);
+              Navigator.of(context).pop();
+              AppLifecycleState.resumed;
+            }
           },
           child: Text("Ubah"),
         ),
@@ -252,7 +280,8 @@ class EditPasswordDialog extends StatelessWidget {
 }
 
 /// 2. Update Profile Data Function
-void updateProfileData(String username, String name, String noTelepon) async {
+void updateProfileData(
+    String id, String username, String name, String noTelepon) async {
   try {
     Response response;
     response = await dio.post(
@@ -275,15 +304,17 @@ void updateProfileData(String username, String name, String noTelepon) async {
 }
 
 /// 3. Update Password Function
-void updatePassword(String newPassword) async {
+void updatePassword(String id, String newPassword) async {
   try {
     Response response = await dio.post(
-      url_update_data, // Replace with your actual Laravel controller URL
+      url_update_pass, // Replace with your actual Laravel controller URL
       queryParameters: {
+        'mahasiswa_id': id,
         'password': newPassword,
       },
     );
     // Clear the password field after successful update
+    idController.text = "";
     passwordController.text = "";
     print("Password updated: ${response.data}");
   } catch (e) {
