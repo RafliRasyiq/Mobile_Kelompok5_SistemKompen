@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:sistem_kompen/profile.dart';
 
 final dio = Dio();
 var all_data = [];
@@ -12,12 +13,9 @@ final TextEditingController nameController_update = TextEditingController();
 final TextEditingController bankController_update = TextEditingController();
 final TextEditingController alamatController_update = TextEditingController();
 
-String url_domain = "http://192.168.1.4:8000/";
+String url_domain = "http://192.168.67.54:8000/";
 String url_all_data = url_domain + "api/all_data";
-String url_create_data = url_domain + "api/create_data";
-String url_show_data = url_domain + "api/show_data";
-String url_update_data = url_domain + "api/edit_data";
-String url_delete_data = url_domain + "api/delete_data";
+
 void main() {
   runApp(const MyApp());
 }
@@ -33,23 +31,24 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: data_tes(),
+      home: DataScreen(),
     );
   }
 }
 
-class data_tes extends StatefulWidget {
-  const data_tes({super.key});
+class DataScreen extends StatefulWidget {
+  const DataScreen({super.key});
+
   @override
-  State<data_tes> createState() => _data_tesState();
+  State<DataScreen> createState() => _DataScreenState();
 }
 
-class _data_tesState extends State<data_tes> with WidgetsBindingObserver {
+class _DataScreenState extends State<DataScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    show_all_data(); // Load data when the widget initializes
+    showAllData(); // Load data when the widget initializes
   }
 
   @override
@@ -60,113 +59,173 @@ class _data_tesState extends State<data_tes> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('MyApp state = $state');
     if (state == AppLifecycleState.resumed) {
-      show_all_data();
+      showAllData();
     }
   }
 
-  // Move show_all_data here so it can use setState
-  void show_all_data() async {
-  try {
-    final response = await dio.post(url_all_data);
-
-    if (response.data is List) {
+  void showAllData() async {
+    try {
+      final response = await dio.post(url_all_data);
+      if (response.data is List) {
+        setState(() {
+          all_data = (response.data as List).map((item) {
+            return {
+              'no': item['no']?.toString() ?? '',
+              'mahasiswa_id': item['mahasiswa_id']?.toString() ?? '',
+              'mahasiswa_nama': item['mahasiswa_nama']?.toString() ?? '',
+              'alpha': item['alpha']?.toString() ?? '',
+            };
+          }).toList();
+        });
+      } else {
+        print("Unexpected data format: ${response.data}");
+        setState(() {
+          all_data = [];
+        });
+      }
+    } catch (e) {
+      print("Error loading data: $e");
       setState(() {
-        all_data = (response.data as List).map((item) {
-          return {
-            'username': item['username']?.toString() ?? '',
-            'mahasiswa_nama': item['mahasiswa_nama']?.toString() ?? '',
-            'status': item['status']?.toString() ?? '',
-          };
-        }).toList();
-      });
-    } else {
-      print("Unexpected data format: ${response.data}");
+          all_data = [];
+        });
     }
-  } catch (e) {
-    print("Error loading data: $e");
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Daftar Mahasiswa Alpha'),
+        titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
+        backgroundColor: const Color(0xFF2D2766),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/profile');
+          },
+        ),
+      ),
       body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 60,
-                decoration: BoxDecoration(color: Colors.red),
-                alignment: Alignment.center,
-                child: Text(
-                  'Daftar Mahasiswa Alpha',
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Cari Mahasiswa...',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(left: 10, right: 10),
-                child: Table(
-                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                  border: TableBorder.all(),
-                  columnWidths: {
-                    0: FlexColumnWidth(1.5),
-                    1: FlexColumnWidth(5),
-                    2: FlexColumnWidth(2)
-                  },
-                  children: [
-                    TableRow(children: [
-                      Text(
-                        'Username',
-                        textAlign: TextAlign.center,
-                        style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      Text(
-                        'Nama Mahasiswa',
-                        textAlign: TextAlign.center,
-                        style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      Text(
-                        'Status',
-                        textAlign: TextAlign.center,
-                        style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      )
-                    ]),
-                    for (var data in all_data)
-                      TableRow(children: [
-                        Text(
-                          data['username'],
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Text(
+                'Data Mahasiswa Alpha',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Table(
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                border: TableBorder.all(color: Colors.grey),
+                columnWidths: const {
+                  0: FlexColumnWidth(0.8),
+                  1: FlexColumnWidth(5.2),
+                  2: FlexColumnWidth(0.8),
+                  3: FlexColumnWidth(1.2),
+                },
+                children: [
+                  TableRow(
+                    decoration: BoxDecoration(color: Colors.grey[200]),
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          'No',
                           textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          data['mahasiswa_nama'],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          'Nama Lengkap',
                           textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          data['status'],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          '(i)',
                           textAlign: TextAlign.center,
-                        )
-                      ])
-                  ],
-                ),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          'alpha',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  for (var i = 0; i < all_data.length; i++)
+                    TableRow(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            (i + 1).toString(),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            all_data[i]['mahasiswa_nama'],
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        MaterialButton(
+                          padding: const EdgeInsets.all(1),
+                          child: Icon(Icons.open_in_full_rounded),
+                          onPressed: () {
+                            idController.text = all_data[i]['id'].toString()!;
+                            print(all_data[i]['mahasiswa_id']);
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            all_data[i]['alpha'],
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
               ),
-              Container(
-                child: MaterialButton(
-                  color: Colors.grey,
-                  height: 30,
-                  minWidth: 20,
-                  onPressed: show_all_data, // Refresh data on button press
-                  child: Text("Refresh Data"),
-                ),
+            ),
+            const SizedBox(height: 10),
+            MaterialButton(
+              color: Colors.grey,
+              height: 40,
+              minWidth: 100,
+              onPressed: showAllData,
+              child: const Text(
+                "Refresh Data",
+                style: TextStyle(color: Colors.white),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

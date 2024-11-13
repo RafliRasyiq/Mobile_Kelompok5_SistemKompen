@@ -21,7 +21,7 @@ final TextEditingController phoneController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 final TextEditingController confirmPasswordController = TextEditingController();
 
-String url_domain = "http://192.168.67.200:8000/";
+String url_domain = "http://192.168.67.54:8000/";
 String url_user_data = url_domain + "api/user_data/1";
 String url_update_data = url_domain + "api/edit_data";
 String url_update_pass = url_domain + "api/edit_pass";
@@ -79,6 +79,12 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBar(
         title: Text("Profile"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/daftarAlpha');
+          },
+        ),
       ),
       body: Center(
         child: Column(
@@ -114,6 +120,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                 usernameController.text = user_data['username'];
                 phoneController.text = user_data['no_telp'].toString();
                 _showEditProfileDialog(context);
+                fetchProfileData;
               },
               child: Text("Ubah Profil"),
             ),
@@ -121,12 +128,23 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
               onPressed: () {
                 idController.text = user_data['mahasiswa_id'].toString();
                 _showEditPasswordDialog(context);
+                fetchProfileData;
               },
               child: Text("Ubah Password"),
             ),
             ElevatedButton(
               onPressed: () => _logout(context),
               child: Text("Log out"),
+            ),
+            MaterialButton(
+              color: Colors.grey,
+              height: 40,
+              minWidth: 100,
+              onPressed: fetchProfileData,
+              child: const Text(
+                "Refresh Data",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -263,8 +281,7 @@ class EditPasswordDialog extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             print("object");
-            if (idController == "" ||
-                passwordController == "") {
+            if (idController == "" || passwordController == "") {
               print("zero");
             } else {
               updatePassword(idController.text, passwordController.text);

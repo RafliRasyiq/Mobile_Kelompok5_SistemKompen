@@ -18,15 +18,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: data_tes(),
+      home: DataScreen(),
       // home: HomePageDosen(),
-      home: ProfilePage(),
+      // home: ProfilePage(),
       routes: {
         '/sidebar' : (context)=>SidebarMenu(),
         '/homepage' : (context)=>HomePageMHS(),
         // '/homepage' : (context)=>HomePageDosen(),
         '/notifikasi' : (context)=>NotificationPage(),
-        '/terimamahasiswa' : (context)=>TerimaMahasiswa(),
+        '/daftarAlpha' : (context)=>DataScreen(),
+        '/profile' : (context)=>ProfilePage(),
       }
     );
   }
