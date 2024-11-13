@@ -12,7 +12,7 @@ final TextEditingController nameController_update = TextEditingController();
 final TextEditingController bankController_update = TextEditingController();
 final TextEditingController alamatController_update = TextEditingController();
 
-String url_domain = "http://192.168.1.3:8000/";
+String url_domain = "http://192.168.1.4:8000/";
 String url_all_data = url_domain + "api/all_data";
 String url_create_data = url_domain + "api/create_data";
 String url_show_data = url_domain + "api/show_data";
@@ -62,7 +62,7 @@ class _data_tesState extends State<data_tes> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print('MyApp state = $state');
     if (state == AppLifecycleState.resumed) {
-      show_all_data(); // Reload data when the app is resumed
+      show_all_data();
     }
   }
 
