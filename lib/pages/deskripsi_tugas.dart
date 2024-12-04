@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'kumpulkan_tugas.dart';
 
 class TaskDetailScreen extends StatelessWidget {
-  const TaskDetailScreen({super.key});
+  final Map<String, dynamic> task;
+
+  const TaskDetailScreen({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,9 @@ class TaskDetailScreen extends StatelessWidget {
             color: Colors.white,
             size: 27,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: const Text(
           'TUGAS',
@@ -69,24 +73,24 @@ class TaskDetailScreen extends StatelessWidget {
                         children: [
                           const SizedBox(height: 60),
                           Center(
-                            child: const Text(
-                              'Bersihkan ruangan RT05',
-                              style: TextStyle(
+                            child: Text(
+                              task['title'],
+                              style: const TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'Rapikan dan bersihkan ruangan, dan pastikan tidak ada sampah tertinggal',
-                            style: TextStyle(
+                          Text(
+                            task['description'],
+                            style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w300),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'Usman Nurhasan, S.Kom., M.T.',
-                            style: TextStyle(
+                          Text(
+                            task['lecturer'],
+                            style: const TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
                             ),
@@ -95,7 +99,7 @@ class TaskDetailScreen extends StatelessWidget {
                           RichText(
                             text: TextSpan(
                               children: [
-                                TextSpan(
+                                const TextSpan(
                                   text: 'Poin Kompen ',
                                   style: TextStyle(
                                     fontSize: 17,
@@ -104,8 +108,8 @@ class TaskDetailScreen extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: '20 Jam',
-                                  style: TextStyle(
+                                  text: '${task['weight']} Jam',
+                                  style: const TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w600,
                                     color: Color(0xFF2D2766),
@@ -115,9 +119,9 @@ class TaskDetailScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'Deadline: 5 hari',
-                            style: TextStyle(
+                          Text(
+                            'Deadline: ${task['due']}',
+                            style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: Color(0xFF2D2766)),
@@ -129,12 +133,13 @@ class TaskDetailScreen extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => KumpulkanTugas()),
+                                      builder: (context) =>
+                                          const KumpulkanTugas()),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
                                 minimumSize: const Size(340, 59),
-                                backgroundColor: Color(0xFF8278AB),
+                                backgroundColor: const Color(0xFF8278AB),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15)),
                               ),
@@ -155,7 +160,7 @@ class TaskDetailScreen extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20.0),
                         child: Image.asset(
-                          'assets/task/task-1.jpg',
+                          task['image'],
                           width: 181,
                           height: 143,
                           fit: BoxFit.cover,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistem_kompen/pages/deskripsi_tugas.dart';
+import 'package:sistem_kompen/pages/list_tugas.dart';
 
 // import 'package:sistem_kompen/pages/form_kumpul_tugas.dart';
 void main() {
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: TaskDetailScreen(),
+    
+      home: DaftarTugas(),
     );
   }
 }
