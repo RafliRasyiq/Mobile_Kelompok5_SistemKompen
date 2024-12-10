@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sistem_kompen/profile.dart';
+import 'package:sistem_kompen/show_profile.dart';
 
 final dio = Dio();
 var all_data = [];
@@ -13,8 +14,9 @@ final TextEditingController nameController_update = TextEditingController();
 final TextEditingController bankController_update = TextEditingController();
 final TextEditingController alamatController_update = TextEditingController();
 
-String url_domain = "http://192.168.67.54:8000/";
+String url_domain = "http://192.168.1.6:8000/";
 String url_all_data = url_domain + "api/all_data";
+String url_show_data = url_domain + "api/show_data";
 
 void main() {
   runApp(const MyApp());
@@ -74,7 +76,7 @@ class _DataScreenState extends State<DataScreen> with WidgetsBindingObserver {
               'no': item['no']?.toString() ?? '',
               'mahasiswa_id': item['mahasiswa_id']?.toString() ?? '',
               'mahasiswa_nama': item['mahasiswa_nama']?.toString() ?? '',
-              'alpha': item['alpha']?.toString() ?? '',
+              'alpha': item['alpha']?.toString() ?? "?",
             };
           }).toList();
         });
@@ -87,8 +89,8 @@ class _DataScreenState extends State<DataScreen> with WidgetsBindingObserver {
     } catch (e) {
       print("Error loading data: $e");
       setState(() {
-          all_data = [];
-        });
+        all_data = [];
+      });
     }
   }
 
@@ -102,7 +104,9 @@ class _DataScreenState extends State<DataScreen> with WidgetsBindingObserver {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/profile');
+            idController.text = "1";
+            String id = "1";
+            profileData(context, id);
           },
         ),
       ),
@@ -134,23 +138,14 @@ class _DataScreenState extends State<DataScreen> with WidgetsBindingObserver {
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                 border: TableBorder.all(color: Colors.grey),
                 columnWidths: const {
-                  0: FlexColumnWidth(0.8),
-                  1: FlexColumnWidth(5.2),
-                  2: FlexColumnWidth(0.8),
-                  3: FlexColumnWidth(1.2),
+                  0: FlexColumnWidth(5),
+                  1: FlexColumnWidth(0.8),
+                  2: FlexColumnWidth(1.2),
                 },
                 children: [
                   TableRow(
                     decoration: BoxDecoration(color: Colors.grey[200]),
                     children: const [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          'No',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
@@ -183,13 +178,6 @@ class _DataScreenState extends State<DataScreen> with WidgetsBindingObserver {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            (i + 1).toString(),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
                             all_data[i]['mahasiswa_nama'],
                             textAlign: TextAlign.center,
                           ),
@@ -198,8 +186,10 @@ class _DataScreenState extends State<DataScreen> with WidgetsBindingObserver {
                           padding: const EdgeInsets.all(1),
                           child: Icon(Icons.open_in_full_rounded),
                           onPressed: () {
-                            idController.text = all_data[i]['id'].toString()!;
+                            idController.text = all_data[i]['id'].toString();
                             print(all_data[i]['mahasiswa_id']);
+                            String id = all_data[i]['mahasiswa_id'];
+                            showProfileData(context, id);
                           },
                         ),
                         Padding(
@@ -230,4 +220,22 @@ class _DataScreenState extends State<DataScreen> with WidgetsBindingObserver {
       ),
     );
   }
+}
+
+void showProfileData(BuildContext context, String id) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ShowProfilePage(mahasiswaId: id),
+    ),
+  );
+}
+
+void profileData(BuildContext context, String id) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ProfilePage(id: id),
+    ),
+  );
 }

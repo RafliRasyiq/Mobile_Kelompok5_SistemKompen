@@ -12,7 +12,8 @@ Map<String, dynamic> user_data = {
   'prodi': '',
   'kelas': '',
   'no_telp': '',
-  'password': ''
+  'password': '',
+  'foto': ''
 };
 final TextEditingController idController = TextEditingController();
 final TextEditingController nameController = TextEditingController();
@@ -21,12 +22,16 @@ final TextEditingController phoneController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 final TextEditingController confirmPasswordController = TextEditingController();
 
-String url_domain = "http://192.168.67.54:8000/";
-String url_user_data = url_domain + "api/user_data/1";
+String url_domain = "http://192.168.1.6:8000/";
+String url_user_data = url_domain + "api/user_data";
 String url_update_data = url_domain + "api/edit_data";
 String url_update_pass = url_domain + "api/edit_pass";
 
 class ProfilePage extends StatefulWidget {
+  final String id;
+
+  ProfilePage({required this.id});
+
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
@@ -36,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    fetchProfileData(); // Fetch data when the screen loads
+    fetchProfileData(widget.id); // Fetch data when the screen loads
   }
 
   @override
@@ -49,13 +54,13 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print('MyApp state = $state');
     if (state == AppLifecycleState.resumed) {
-      fetchProfileData();
+      fetchProfileData(widget.id);
     }
   }
 
-  void fetchProfileData() async {
+  void fetchProfileData(String id) async {
     try {
-      final response = await dio.post(url_user_data);
+      final response = await dio.post(url_user_data, data: {'id': id});
       if (response.data != null && response.data is Map<String, dynamic>) {
         setState(() {
           user_data = response.data;
@@ -92,26 +97,42 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
             SizedBox(height: 20),
             CircleAvatar(
               radius: 50,
-              child: Text(
-                "RS",
-                style: TextStyle(fontSize: 40),
-              ),
+              backgroundImage: user_data['foto'] != null &&
+                      user_data['foto'].isNotEmpty
+                  ? NetworkImage(
+                      "http://your-backend-domain/${user_data['foto']}")
+                  : AssetImage('public/images/default.jpg') as ImageProvider,
+              child: user_data['foto'] == null || user_data['foto'].isEmpty
+                  ? Text(
+                      "RS",
+                      style: TextStyle(fontSize: 40, color: Colors.white),
+                    )
+                  : null,
             ),
             SizedBox(height: 20),
-            ProfileInfoField(label: "Username", value: user_data["username"]),
-            ProfileInfoField(
-                label: "Nama Lengkap",
-                value: user_data['mahasiswa_nama'] ?? ""),
-            ProfileInfoField(
-                label: "NIM", value: user_data['nim']?.toString() ?? ""),
-            ProfileInfoField(
-                label: "Jurusan", value: user_data['jurusan'] ?? ""),
-            ProfileInfoField(
-                label: "Program Studi", value: user_data['prodi'] ?? ""),
-            ProfileInfoField(label: "Kelas", value: user_data['kelas'] ?? ""),
-            ProfileInfoField(
-                label: "No. Telephone",
-                value: user_data['no_telp']?.toString() ?? ""),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                children: <Widget>[
+                  ProfileInfoField(
+                      label: "Username", value: user_data["username"]),
+                  ProfileInfoField(
+                      label: "Nama Lengkap",
+                      value: user_data['mahasiswa_nama'] ?? ""),
+                  ProfileInfoField(
+                      label: "NIM", value: user_data['nim']?.toString() ?? ""),
+                  ProfileInfoField(
+                      label: "Jurusan", value: user_data['jurusan'] ?? ""),
+                  ProfileInfoField(
+                      label: "Program Studi", value: user_data['prodi'] ?? ""),
+                  ProfileInfoField(
+                      label: "Kelas", value: user_data['kelas'] ?? ""),
+                  ProfileInfoField(
+                      label: "No. Telephone",
+                      value: user_data['no_telp']?.toString() ?? ""),
+                ],
+              ),
+            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -140,7 +161,14 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
               color: Colors.grey,
               height: 40,
               minWidth: 100,
-              onPressed: fetchProfileData,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ProfilePage(id: user_data['mahasiswa_id'])),
+                );
+              },
               child: const Text(
                 "Refresh Data",
                 style: TextStyle(color: Colors.white),
@@ -185,12 +213,19 @@ class ProfileInfoField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(value),
+          Text(
+            label,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          ),
+          SizedBox(height: 5),
+          Text(
+            value,
+            style: TextStyle(fontSize: 14, color: Colors.black54),
+          ),
         ],
       ),
     );
@@ -304,7 +339,7 @@ void updateProfileData(
     response = await dio.post(
       url_update_data,
       queryParameters: {
-        'mahasiswa_id': 1,
+        'mahasiswa_id': id,
         'username': username,
         'mahasiswa_nama': name,
         'no_telp': noTelepon,
