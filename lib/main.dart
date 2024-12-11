@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sistem_kompen/homepage_dosen.dart';
-import 'package:sistem_kompen/homepage_mahasiswa.dart';
+import 'package:sistem_kompen/dosen/homepage_dosen.dart';
+import 'package:sistem_kompen/mahasiswa/homepage_mahasiswa.dart';
 // import 'package:sistem_kompen/sidebar_menu_dosen.dart';
 import 'package:sistem_kompen/sidebar_menu_mahasiswa.dart';
 import 'package:sistem_kompen/notifikasi.dart';
@@ -9,7 +9,7 @@ import 'package:sistem_kompen/KegiatanTerprogramPage.dart';
 import 'package:sistem_kompen/kelola_kompen.dart';
 import 'package:sistem_kompen/profile.dart';
 import 'package:sistem_kompen/show_profile.dart';
-import 'package:sistem_kompen/login.dart';
+import 'package:sistem_kompen/login/login.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,10 +20,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DataScreen(),
+      // home: DataScreen(),
       // home: HomePageDosen(),
       // home: ProfilePage(),
-      // home: LoginScreen(),
+      home: LoginScreen(),
       routes: {
         '/sidebar' : (context)=>SidebarMenu(),
         '/homepage' : (context)=>HomePageMHS(),

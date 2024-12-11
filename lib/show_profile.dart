@@ -18,7 +18,7 @@ Map<String, dynamic> user_data = {
   'alpha': '',
 };
 
-String url_domain = "http://192.168.1.6:8000/";
+String url_domain = "http://192.168.67.179:8000/";
 String url_show_data = url_domain + "api/show_data";
 
 class ShowProfilePage extends StatefulWidget {

@@ -28,7 +28,7 @@ String url_update_data = url_domain + "api/edit_data";
 String url_update_pass = url_domain + "api/edit_pass";
 
 class ProfilePage extends StatefulWidget {
-  final String id;
+  final int id;
 
   ProfilePage({required this.id});
 
@@ -58,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
     }
   }
 
-  void fetchProfileData(String id) async {
+  void fetchProfileData(int id) async {
     try {
       final response = await dio.post(url_user_data, data: {'id': id});
       if (response.data != null && response.data is Map<String, dynamic>) {

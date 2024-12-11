@@ -14,7 +14,7 @@ final TextEditingController nameController_update = TextEditingController();
 final TextEditingController bankController_update = TextEditingController();
 final TextEditingController alamatController_update = TextEditingController();
 
-String url_domain = "http://192.168.1.6:8000/";
+String url_domain = "http://192.168.67.179:8000/";
 String url_all_data = url_domain + "api/all_data";
 String url_show_data = url_domain + "api/show_data";
 
