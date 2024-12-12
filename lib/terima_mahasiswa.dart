@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 
 class TerimaMahasiswa extends StatefulWidget {
+  const TerimaMahasiswa({super.key});
+
   @override
   _TerimaMahasiswaState createState() => _TerimaMahasiswaState();
 }

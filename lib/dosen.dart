@@ -4,7 +4,7 @@ import 'dosen/profile.dart';
 
 class DosenPage extends StatefulWidget {
   final String token; // Tambahkan parameter token
-  final int id;
+  final String id;
 
   const DosenPage({super.key, required this.token, required this.id});
 
@@ -23,8 +23,10 @@ class _DosenPageState extends State<DosenPage> {
 
     // Inisialisasi halaman dengan token
     _pages = [
-      HomePageDosen(),
-      ProfilePage(id: widget.id)
+      DashboardDosen(token: widget.token, id: widget.id),
+      ProfilePage(
+        token: widget.token, id: widget.id
+      )
       //   Dashboard(token: widget.token), // Pass token ke Dashboard
       //   HistoryPage(),
       //   NotificationPage(),

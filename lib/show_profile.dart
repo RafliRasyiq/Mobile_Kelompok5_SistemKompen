@@ -19,12 +19,12 @@ Map<String, dynamic> user_data = {
 };
 
 String url_domain = "http://192.168.67.179:8000/";
-String url_show_data = url_domain + "api/show_data";
+String url_show_data = "${url_domain}api/show_data";
 
 class ShowProfilePage extends StatefulWidget {
   final String mahasiswaId;
 
-  ShowProfilePage({required this.mahasiswaId});
+  const ShowProfilePage({super.key, required this.mahasiswaId});
 
   @override
   State<ShowProfilePage> createState() => _ProfilePageState();
@@ -73,7 +73,7 @@ class _ProfilePageState extends State<ShowProfilePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
+        title: const Text("Profile"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
@@ -84,26 +84,26 @@ class _ProfilePageState extends State<ShowProfilePage>
       body: Center(
         child: Column(
           children: <Widget>[
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             CircleAvatar(
               radius: 50,
               backgroundImage:
                   user_data['foto'] != null && user_data['foto'].isNotEmpty
                       ? NetworkImage(
                           "http://your-backend-domain/${user_data['foto']}")
-                      : AssetImage('public/images/default.jpg')
+                      : const AssetImage('public/images/default.jpg')
                           as ImageProvider,
               child: user_data['foto'] == null || user_data['foto'].isEmpty
-                  ? Text(
+                  ? const Text(
                       "RS",
                       style: TextStyle(fontSize: 40, color: Colors.white),
                     )
                   : null,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              padding: EdgeInsets.all(10),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(10),
@@ -120,39 +120,39 @@ class _ProfilePageState extends State<ShowProfilePage>
                 children: [
                   Column(
                     children: [
-                      Text(
+                      const Text(
                         "Alpha",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         user_data['alpha']?.toString() ?? "?",
-                        style: TextStyle(fontSize: 16, color: Colors.black54),
+                        style: const TextStyle(fontSize: 16, color: Colors.black54),
                       ),
                     ],
                   ),
                   Column(
                     children: [
-                      Text(
+                      const Text(
                         "Poin",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         user_data['poin']?.toString() ?? "?",
-                        style: TextStyle(fontSize: 16, color: Colors.black54),
+                        style: const TextStyle(fontSize: 16, color: Colors.black54),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: <Widget>[
                   ProfileInfoField(
                       label: "Username", value: user_data["username"]),
@@ -189,23 +189,23 @@ class ProfileInfoField extends StatelessWidget {
   final String label;
   final String value;
 
-  ProfileInfoField({required this.label, required this.value});
+  const ProfileInfoField({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Text(
             value,
-            style: TextStyle(fontSize: 14, color: Colors.black54),
+            style: const TextStyle(fontSize: 14, color: Colors.black54),
           ),
         ],
       ),

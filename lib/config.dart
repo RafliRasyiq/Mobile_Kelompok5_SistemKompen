@@ -6,5 +6,9 @@ class Config {
   static const String login_endpoint = '$base_domain/api/login';
 
   //Endpoint get User Data
-  static const String user_endpoint = '$base_domain/api/user';
+  static const String mahasiswa_endpoint = '$base_domain/api/mahasiswa/mahasiswa_data';
+  static const String dosen_endpoint = '$base_domain/api/dosen/dosen_data';
+  static const String tendik_endpoint = '$base_domain/api/tendik/tendik_data';
+
+  
 }

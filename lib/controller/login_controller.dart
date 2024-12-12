@@ -33,6 +33,7 @@ class LoginController {
 
         // Menyimpan token ke shared preferences
         await Sharedpref.saveToken(data['token']);
+        await Sharedpref.saveUserId(data['user']['user_id']!.toString());
         print('Token: ${data['token']}');
         return {
           'success': true,

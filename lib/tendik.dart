@@ -4,7 +4,7 @@ import 'tendik/profile.dart';
 
 class TendikPage extends StatefulWidget {
   final String token; // Tambahkan parameter token
-  final int id;
+  final String id;
 
   const TendikPage({super.key, required this.token, required this.id});
 
@@ -23,8 +23,8 @@ class _TendikPageState extends State<TendikPage> {
 
     // Inisialisasi halaman dengan token
     _pages = [
-      HomePageTendik(),
-      ProfilePage(id: widget.id)
+      DashboardTendik(token: widget.token, id: widget.id),
+      ProfilePage(token: widget.token, id: widget.id)
       //   Dashboard(token: widget.token), // Pass token ke Dashboard
       //   HistoryPage(),
       //   NotificationPage(),

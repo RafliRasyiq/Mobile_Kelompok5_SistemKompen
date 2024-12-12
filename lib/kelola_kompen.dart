@@ -15,8 +15,8 @@ final TextEditingController bankController_update = TextEditingController();
 final TextEditingController alamatController_update = TextEditingController();
 
 String url_domain = "http://192.168.67.179:8000/";
-String url_all_data = url_domain + "api/all_data";
-String url_show_data = url_domain + "api/show_data";
+String url_all_data = "${url_domain}api/all_data";
+String url_show_data = "${url_domain}api/show_data";
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: DataScreen(),
+      home: const DataScreen(),
     );
   }
 }
@@ -184,7 +184,7 @@ class _DataScreenState extends State<DataScreen> with WidgetsBindingObserver {
                         ),
                         MaterialButton(
                           padding: const EdgeInsets.all(1),
-                          child: Icon(Icons.open_in_full_rounded),
+                          child: const Icon(Icons.open_in_full_rounded),
                           onPressed: () {
                             idController.text = all_data[i]['id'].toString();
                             print(all_data[i]['mahasiswa_id']);

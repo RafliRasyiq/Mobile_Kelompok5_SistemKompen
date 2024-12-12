@@ -19,8 +19,8 @@ class LoginScreen extends StatelessWidget {
         child: Center(
           child: ListView(
             shrinkWrap: true,
-            children: [
-              const LoginForm(),
+            children: const [
+              LoginForm(),
             ],
           ),
         ),
@@ -42,7 +42,7 @@ class _LoginFormState extends State<LoginForm> {
   final LoginController _loginController = LoginController(Config.base_domain);
   final _formKey = GlobalKey<FormState>();
 
-  String _errorMessage = '';
+  final String _errorMessage = '';
   bool _isHelpVisible = false;
 
   Future<void> _handleLogin(BuildContext context) async {
@@ -61,8 +61,9 @@ class _LoginFormState extends State<LoginForm> {
       if (result['success']) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', result['data']['token']);
+      await prefs.setString('user_id', result['data']['user']['user_id']!.toString());
       int levelId = result['data']['user']['level_id'];
-      int userId = result['data']['user']['user_id'];
+      String userId = result['data']['user']['user_id']!.toString();
       if (levelId == 2) {
         Navigator.push(
           context,
@@ -110,10 +111,10 @@ class _LoginFormState extends State<LoginForm> {
           children: [
             const SizedBox(height: 122),
             if (!_isHelpVisible)
-              Column(
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     "Selamat Datang",
                     style: TextStyle(
                       fontSize: 24,
@@ -121,7 +122,7 @@ class _LoginFormState extends State<LoginForm> {
                       color: Colors.orange,
                     ),
                   ),
-                  const Text(
+                  Text(
                     "Silahkan login terlebih dahulu",
                     style: TextStyle(
                       fontSize: 16,
@@ -131,10 +132,10 @@ class _LoginFormState extends State<LoginForm> {
                 ],
               ),
             if (_isHelpVisible)
-              Column(
+              const Column(
                 children: [
-                  const SizedBox(height: 32),
-                  const Text(
+                  SizedBox(height: 32),
+                  Text(
                     'Silahkan hubungi admin untuk bantuan lebih lanjut.',
                     style: TextStyle(fontSize: 16),
                     textAlign: TextAlign.left,
@@ -216,9 +217,9 @@ class _LoginFormState extends State<LoginForm> {
                 onTap: () {
                   _showHelpDialog(context);
                 },
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Text(
                       "Tidak bisa login?",
                       style: TextStyle(fontSize: 16),

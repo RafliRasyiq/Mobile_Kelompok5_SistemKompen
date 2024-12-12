@@ -1,69 +1,165 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:sistem_kompen/sidebar_menu_dosen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sistem_kompen/controller/dosen_controller.dart';
+import 'package:sistem_kompen/login/login.dart';
+import '../config.dart';
+import 'package:sistem_kompen/core/shared_prefix.dart';
+import 'package:sistem_kompen/dosen/profile.dart';
 
-class HomePageDosen extends StatelessWidget {
+class DashboardDosen extends StatefulWidget {
+  final String token;
+  final String id;
+
+  const DashboardDosen({super.key, required this.token, required this.id});
+
+  @override
+  _DashboardDosenState createState() => _DashboardDosenState();
+}
+
+class _DashboardDosenState extends State<DashboardDosen> {
+  String tokens = '';
+  String user_id = '';
+  String nama = 'Loading...';
+  String nip = 'Loading...';
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _dashboardData();
+  }
+
+  Future<void> _dashboardData() async {
+    try {
+      // Ambil token dari SharedPreferences jika diperlukan
+      final token = await Sharedpref.getToken();
+      final dosenId = await Sharedpref.getUserId();
+
+      if (token == '') {
+        throw Exception('Token is missing');
+      }
+
+      final data = await DosenController.profile(token, dosenId);
+
+      setState(() {
+        tokens = token;
+        user_id = data['user_id'] ?? '-';
+        nama = data['nama'] ?? '-';
+        nip = data['nip'] ?? '-';
+      });
+      print(data['message']);
+    } catch (e) {
+      print('Error loading dashboard data: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: const Center(
-            child: Text(
-          'HOME',
-          style: TextStyle(color: Colors.white),
-        )),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/sidebar');
-          },
-        ),
-        actions: [
-          PopupMenuButton<int>(
-            icon: const Icon(Icons.person, color: Colors.white),
-            onSelected: (item) => onSelected(context, item),
-            itemBuilder: (context) => [
-              PopupMenuItem<int>(
-                value: 0,
-                child: ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Rikat Setya Gusti\n2241760053'),
-                ),
-              ),
-              PopupMenuDivider(),
-              PopupMenuItem<int>(
-                value: 1,
-                child: Row(
-                  children: [
-                    Icon(Icons.menu_book, color: Colors.black),
-                    const SizedBox(width: 15),
-                    Text('Profile'),
-                  ],
-                ),
-              ),
-              PopupMenuItem<int>(
-                value: 2,
-                child: Row(
-                  children: [
-                    Icon(Icons.logout, color: Colors.black),
-                    const SizedBox(width: 15),
-                    Text('Logout'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-      drawer: SidebarMenu(),
+
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              decoration: const BoxDecoration(
+                color: Color(0xFF2D2766), // Ensure no white overlay
+              ),
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        PopupMenuButton<int>(
+                          icon: const Icon(Icons.menu_rounded, color: Colors.white),
+                          onSelected: (item) => onSelectedMenu(context, item),
+                          itemBuilder: (context) => [
+                            PopupMenuItem<int>(
+                              value: 0,
+                              child: ListTile(
+                                leading: Icon(Icons.menu_open_rounded),
+                                title: Text('Menu'),
+                              ),
+                            ),
+                            PopupMenuDivider(),
+                            PopupMenuItem<int>(
+                              value: 1,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.home_rounded, color: Colors.black),
+                                  const SizedBox(width: 15),
+                                  Text('Home'),
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem<int>(
+                              value: 2,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  const SizedBox(width: 15),
+                                  Text('Tambah Tugas'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Center(
+                          child: Text(
+                            'HOME',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                backgroundColor: Colors.transparent),
+                          ),
+                        ),
+                        PopupMenuButton<int>(
+                          icon: const Icon(Icons.person, color: Colors.white),
+                          onSelected: (item) => onSelected(context, item),
+                          itemBuilder: (context) => [
+                            PopupMenuItem<int>(
+                              value: 0,
+                              child: ListTile(
+                                leading: Icon(Icons.person),
+                                title: Text('$nama\n$nip'),
+                              ),
+                            ),
+                            PopupMenuDivider(),
+                            PopupMenuItem<int>(
+                              value: 1,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.menu_book, color: Colors.black),
+                                  const SizedBox(width: 15),
+                                  Text('Profile'),
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem<int>(
+                              value: 2,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.logout, color: Colors.black),
+                                  const SizedBox(width: 15),
+                                  Text('Logout'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
             // Background Image and Track Record (adjusted with Stack and Positioned)
             Stack(
               clipBehavior: Clip
@@ -85,8 +181,8 @@ class HomePageDosen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Rikat Setya Gusti Pangeran',
+                      Text(
+                        nama,
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -94,7 +190,7 @@ class HomePageDosen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '2241760053',
+                        nip,
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.white.withOpacity(0.8),
@@ -231,10 +327,35 @@ class HomePageDosen extends StatelessWidget {
       ],
     );
   }
+
   onSelected(BuildContext context, int item) {
     switch (item) {
       case 1:
-        // Handle Profile action
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProfilePage(token: tokens, id: user_id)),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
+
+        break;
+    }
+  }
+
+  onSelectedMenu(BuildContext context, int item) {
+    switch (item) {
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  DashboardDosen(token: tokens, id: user_id)),
+        );
         break;
       case 2:
         // Handle Logout action
@@ -248,7 +369,7 @@ class NotificationItem extends StatelessWidget {
   final String subtitle;
   final String time;
 
-  NotificationItem({
+  const NotificationItem({super.key, 
     required this.title,
     required this.subtitle,
     required this.time,

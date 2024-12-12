@@ -23,14 +23,14 @@ final TextEditingController passwordController = TextEditingController();
 final TextEditingController confirmPasswordController = TextEditingController();
 
 String url_domain = "http://192.168.67.179:8000/";
-String url_user_data = url_domain + "api/user_data";
-String url_update_data = url_domain + "api/edit_data";
-String url_update_pass = url_domain + "api/edit_pass";
+String url_user_data = "${url_domain}api/user_data";
+String url_update_data = "${url_domain}api/edit_data";
+String url_update_pass = "${url_domain}api/edit_pass";
 
 class ProfilePage extends StatefulWidget {
   final String id;
 
-  ProfilePage({required this.id});
+  const ProfilePage({super.key, required this.id});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -83,7 +83,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
+        title: const Text("Profile"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
@@ -94,25 +94,25 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
       body: Center(
         child: Column(
           children: <Widget>[
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             CircleAvatar(
               radius: 50,
               backgroundImage: user_data['foto'] != null &&
                       user_data['foto'].isNotEmpty
                   ? NetworkImage(
                       "http://your-backend-domain/${user_data['foto']}")
-                  : AssetImage('public/images/default.jpg') as ImageProvider,
+                  : const AssetImage('public/images/default.jpg') as ImageProvider,
               child: user_data['foto'] == null || user_data['foto'].isEmpty
-                  ? Text(
+                  ? const Text(
                       "RS",
                       style: TextStyle(fontSize: 40, color: Colors.white),
                     )
                   : null,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: <Widget>[
                   ProfileInfoField(
                       label: "Username", value: user_data["username"]),
@@ -133,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 idController.text = user_data['mahasiswa_id'].toString();
@@ -143,7 +143,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                 _showEditProfileDialog(context);
                 fetchProfileData;
               },
-              child: Text("Ubah Profil"),
+              child: const Text("Ubah Profil"),
             ),
             ElevatedButton(
               onPressed: () {
@@ -151,11 +151,11 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                 _showEditPasswordDialog(context);
                 fetchProfileData;
               },
-              child: Text("Ubah Password"),
+              child: const Text("Ubah Password"),
             ),
             ElevatedButton(
               onPressed: () => _logout(context),
-              child: Text("Log out"),
+              child: const Text("Log out"),
             ),
             MaterialButton(
               color: Colors.grey,
@@ -208,23 +208,23 @@ class ProfileInfoField extends StatelessWidget {
   final String label;
   final String value;
 
-  ProfileInfoField({required this.label, required this.value});
+  const ProfileInfoField({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Text(
             value,
-            style: TextStyle(fontSize: 14, color: Colors.black54),
+            style: const TextStyle(fontSize: 14, color: Colors.black54),
           ),
         ],
       ),
@@ -233,24 +233,26 @@ class ProfileInfoField extends StatelessWidget {
 }
 
 class EditProfileDialog extends StatelessWidget {
+  const EditProfileDialog({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Ubah Profil'),
+      title: const Text('Ubah Profil'),
       content: SingleChildScrollView(
         child: Column(
           children: [
             TextField(
               controller: nameController,
-              decoration: InputDecoration(labelText: 'Nama Lengkap'),
+              decoration: const InputDecoration(labelText: 'Nama Lengkap'),
             ),
             TextField(
               controller: usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+              decoration: const InputDecoration(labelText: 'Username'),
             ),
             TextField(
               controller: phoneController,
-              decoration: InputDecoration(labelText: 'No Telepon'),
+              decoration: const InputDecoration(labelText: 'No Telepon'),
             ),
           ],
         ),
@@ -260,7 +262,7 @@ class EditProfileDialog extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text("Batal"),
+          child: const Text("Batal"),
         ),
         ElevatedButton(
           onPressed: () {
@@ -277,7 +279,7 @@ class EditProfileDialog extends StatelessWidget {
               AppLifecycleState.resumed;
             }
           },
-          child: Text("Ubah"),
+          child: const Text("Ubah"),
         ),
       ],
     );
@@ -285,22 +287,24 @@ class EditProfileDialog extends StatelessWidget {
 }
 
 class EditPasswordDialog extends StatelessWidget {
+  const EditPasswordDialog({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Ubah Password'),
+      title: const Text('Ubah Password'),
       content: SingleChildScrollView(
         child: Column(
           children: [
             TextField(
               controller: passwordController,
-              decoration: InputDecoration(labelText: 'Password Baru'),
+              decoration: const InputDecoration(labelText: 'Password Baru'),
               obscureText: true,
             ),
             TextField(
               controller: confirmPasswordController,
               decoration:
-                  InputDecoration(labelText: 'Konfirmasi Password Baru'),
+                  const InputDecoration(labelText: 'Konfirmasi Password Baru'),
               obscureText: true,
             ),
           ],
@@ -311,7 +315,7 @@ class EditPasswordDialog extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text("Batal"),
+          child: const Text("Batal"),
         ),
         ElevatedButton(
           onPressed: () {
@@ -324,7 +328,7 @@ class EditPasswordDialog extends StatelessWidget {
               AppLifecycleState.resumed;
             }
           },
-          child: Text("Ubah"),
+          child: const Text("Ubah"),
         ),
       ],
     );

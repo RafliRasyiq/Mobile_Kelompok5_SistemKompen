@@ -4,7 +4,7 @@ import 'mahasiswa/profile.dart';
 
 class MahasiswaPage extends StatefulWidget {
   final String token; // Tambahkan parameter token
-  final int id;
+  final String id; // Tambahkan parameter id
 
   const MahasiswaPage({super.key, required this.token, required this.id});
 
@@ -23,8 +23,8 @@ class _MahasiswaPageState extends State<MahasiswaPage> {
 
     // Inisialisasi halaman dengan token
     _pages = [
-      HomePageMHS(),
-      ProfilePage(id: widget.id)
+      DashboardMahasiswa(token: widget.token, id:widget.id ),
+      ProfilePage(token: widget.token, id:widget.id)
       //   Dashboard(token: widget.token), // Pass token ke Dashboard
       //   HistoryPage(),
       //   NotificationPage(),
