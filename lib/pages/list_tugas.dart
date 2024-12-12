@@ -9,7 +9,7 @@ final dio = Dio(
   ),
 );
 
-String urlDomain = "http://192.168.67.79:8000/";
+String urlDomain = "http://192.168.67.198:8000/";
 String urlAllData = urlDomain + "api/all_data";
 
 void main() {
