@@ -11,10 +11,10 @@ final dio = Dio(BaseOptions(
 ));
 
 var allData = [];
-String urlDomain = "http://192.168.1.8:8000/";
+String urlDomain = "http://192.168.189.218:8000/";
 String urlAllData = urlDomain + "api/all_data";
-String urlShowData = urlDomain + "api/show_data/";
-String urlUpdateStatus = urlDomain + "api/update_status/";
+String urlShowData = urlDomain + "api/show_data";
+String urlUpdateStatus = urlDomain + "api/update_status";
 
 void main() {
   runApp(const MyApp());
@@ -32,20 +32,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const DataListScreen(),
       routes: {
-        // Menambahkan rute untuk login
         '/login': (context) => const LoginScreen(),
-      },
-      onGenerateRoute: (settings) {
-        // Menangani rute yang tidak dikenal
-        if (settings.name == '/login') {
-          return MaterialPageRoute(builder: (context) => const LoginScreen());
-        }
-        return null;
-      },
-      // Tentukan onUnknownRoute untuk menangani rute yang tidak dikenali
-      onUnknownRoute: (settings) {
-        return MaterialPageRoute(
-            builder: (context) => const UnknownRouteScreen());
       },
     );
   }
@@ -129,7 +116,7 @@ class _DataListScreenState extends State<DataListScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => TaskDetailScreen(
-                                  taskId: data['pengumpulan_id']),
+                                  pengumpulanId: data['pengumpulan_id']),
                             ),
                           );
                         },
@@ -148,9 +135,9 @@ class _DataListScreenState extends State<DataListScreen> {
 
 // Screen to display task details and update status
 class TaskDetailScreen extends StatefulWidget {
-  final int taskId;
+  final int pengumpulanId;
 
-  const TaskDetailScreen({super.key, required this.taskId});
+  const TaskDetailScreen({super.key, required this.pengumpulanId});
 
   @override
   _TaskDetailScreenState createState() => _TaskDetailScreenState();
@@ -170,7 +157,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   // Fetch task details
   void fetchTaskDetail() async {
     try {
-      Response response = await dio.get('$urlShowData${widget.taskId}');
+      Response response = await dio.post(urlShowData, data: {
+        'pengumpulan_id': widget.pengumpulanId,
+      });
       print("Task Detail Response: ${response.data}");
       if (response.data['success'] == true) {
         setState(() {
@@ -184,19 +173,103 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         });
       }
     } catch (e) {
-      print("Error fetching task details: $e");
+      print("Error fetching task detail: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to load task details!')),
+        const SnackBar(content: Text('Failed to fetch task detail!')),
       );
     }
   }
 
-  // Full URL for image path
-  String fullImageUrl(String? imagePath) {
-    if (imagePath != null && !imagePath.startsWith('http')) {
-      return urlDomain + imagePath; // Prepend domain to relative image path
+  // Update task status to 'terima' without reason
+  void updateStatusTerima() async {
+    try {
+      Response response = await dio.post(urlUpdateStatus, data: {
+        'status': 'terima',
+        'pengumpulan_id': widget.pengumpulanId,
+      });
+
+      if (response.data['success'] == true) {
+        fetchTaskDetail(); // Refresh task detail after update
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Status updated to Terima!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update status!')),
+        );
+      }
+    } catch (e) {
+      print("Error updating status to 'terima': $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update status!')),
+      );
     }
-    return imagePath ?? '';
+  }
+
+  // Update task status to 'tolak' with reason
+  void updateStatusTolak(String alasan) async {
+    try {
+      Response response = await dio.post(urlUpdateStatus, data: {
+        'status': 'tolak',
+        'alasan': alasan,
+        'pengumpulan_id': widget.pengumpulanId,
+      });
+
+      if (response.data['success'] == true) {
+        fetchTaskDetail(); // Refresh task detail after update
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Status updated to Tolak!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update status!')),
+        );
+      }
+    } catch (e) {
+      print("Error updating status to 'tolak': $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update status!')),
+      );
+    }
+  }
+
+  // Dialog for tolak button to enter reason
+  void showTolakDialog() {
+    final TextEditingController alasanController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Masukkan Alasan Tolak'),
+        content: TextField(
+          controller: alasanController,
+          maxLines: 3,
+          decoration: const InputDecoration(hintText: "Alasan"),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              String alasan = alasanController.text.trim();
+              if (alasan.isNotEmpty) {
+                updateStatusTolak(alasan);
+                Navigator.of(context).pop();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Alasan tidak boleh kosong!')),
+                );
+              }
+            },
+            child: const Text('kirim'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Batal'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -204,7 +277,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     if (taskDetail == null) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Loading...'),
+          title: const Text('Task Detail'),
+          centerTitle: true,
           backgroundColor: Colors.deepPurple,
         ),
         body: const Center(child: CircularProgressIndicator()),
@@ -213,166 +287,38 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detail Tugas'),
+        title: const Text('Task Detail'),
+        centerTitle: true,
         backgroundColor: Colors.deepPurple,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                  'Nama Mahasiswa: ${taskDetail['mahasiswa']['mahasiswa_nama']}'),
-              Text('Nama Tugas: ${taskDetail['tugas']['tugas_nama']}'),
-              Text('Deskripsi: ${taskDetail['tugas']['deskripsi']}'),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.image),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Foto Sebelum'),
-                            content: Image.network(
-                                fullImageUrl(taskDetail['foto_sebelum'])),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  const Text('Foto Sebelum'),
-                ],
+        child: Column(
+          children: [
+            Text('Tugas: ${taskDetail['tugas']['tugas_nama']}'),
+            const SizedBox(height: 10),
+            Text(
+                'Nama Mahasiswa: ${taskDetail['mahasiswa']['mahasiswa_nama']}'),
+            const SizedBox(height: 10),
+            Text('Tanggal Pengumpulan: ${taskDetail['tanggal']}'),
+            const SizedBox(height: 10),
+            Text('Status: ${taskDetail['status'] ?? 'Belum Diperbarui'}'),
+            const SizedBox(height: 20),
+            if (!isTaskAccepted && !isTaskRejected)
+              ElevatedButton(
+                onPressed: updateStatusTerima, // Directly accept without reason
+                child: const Text('Terima Tugas'),
               ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.image),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Foto Sesudah'),
-                            content: Image.network(
-                                fullImageUrl(taskDetail['foto_sesudah'])),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  const Text('Foto Sesudah'),
-                ],
+            if (!isTaskAccepted && !isTaskRejected)
+              ElevatedButton(
+                onPressed:
+                    showTolakDialog, // Show dialog for entering rejection reason
+                child: const Text('Tolak Tugas'),
               ),
-              const SizedBox(height: 10),
-              Text('Tanggal: ${taskDetail['tanggal']}'),
-              const SizedBox(height: 10),
-              Text('Status: ${taskDetail['status'] ?? 'Belum Diperbarui'}'),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                    onPressed: isTaskAccepted || isTaskRejected
-                        ? null
-                        : () {
-                            updateStatus('terima');
-                          },
-                    child: const Text('Terima'),
-                  ),
-                  ElevatedButton(
-                    onPressed: isTaskAccepted || isTaskRejected
-                        ? null
-                        : () {
-                            updateStatus('tolak');
-                          },
-                    child: const Text('Tolak'),
-                  ),
-                ],
-              ),
-            ],
-          ),
+          ],
         ),
       ),
     );
-  }
-
-  // Update task status (accept/reject)
-  void updateStatus(String status) async {
-    String alasan = '';
-    if (status == 'tolak') {
-      // Dialog untuk memasukkan alasan penolakan
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Masukkan Alasan'),
-            content: TextField(
-              onChanged: (value) {
-                alasan = value; // Menyimpan alasan dari inputan user
-              },
-              decoration: const InputDecoration(hintText: 'Alasan penolakan'),
-            ),
-            actions: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _sendUpdateStatus(status, alasan);
-                },
-                child: const Text('Kirim'),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      _sendUpdateStatus(status, alasan);
-    }
-  }
-
-  // Send status update to the server
-  void _sendUpdateStatus(String status, String alasan) async {
-    try {
-      var data = {
-        'status': status,
-        'alasan': alasan,
-      };
-
-      // Tidak perlu mengonversi taskId lagi, biarkan tetap int
-      Response response = await dio.post(
-        '$urlUpdateStatus${widget.taskId}', // Menggunakan taskId sebagai int dalam URL
-        data: data,
-      );
-
-      print("Update Response: ${response.data}");
-
-      // Memastikan response data sesuai dengan format yang diinginkan
-      if (response.data['success'] == true) {
-        setState(() {
-          taskDetail['status'] = status;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Status berhasil diperbarui')),
-        );
-      } else {
-        print('API response error: ${response.data}');
-      }
-    } catch (e) {
-      print("Error updating status: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Gagal memperbarui status!')),
-      );
-    }
   }
 }
 
