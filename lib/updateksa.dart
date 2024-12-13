@@ -47,6 +47,8 @@ class DataListScreen extends StatefulWidget {
 }
 
 class _DataListScreenState extends State<DataListScreen> {
+  String _searchQuery = ""; // Variabel untuk menyimpan query pencarian
+
   @override
   void initState() {
     super.initState();
@@ -69,8 +71,24 @@ class _DataListScreenState extends State<DataListScreen> {
     }
   }
 
+  // Fungsi untuk menyaring data berdasarkan query pencarian
+  List<dynamic> getFilteredData() {
+    if (_searchQuery.isEmpty) {
+      return allData; // Tampilkan semua data jika pencarian kosong
+    }
+    return allData.where((item) {
+      String tugasNama = item['tugas']['tugas_nama']?.toLowerCase() ?? '';
+      String mahasiswaNama =
+          item['mahasiswa']['mahasiswa_nama']?.toLowerCase() ?? '';
+      return tugasNama.contains(_searchQuery.toLowerCase()) ||
+          mahasiswaNama.contains(_searchQuery.toLowerCase());
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<dynamic> filteredData = getFilteredData(); // Data hasil filter
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Status Penugasan'),
@@ -83,32 +101,77 @@ class _DataListScreenState extends State<DataListScreen> {
           children: [
             TextField(
               decoration: const InputDecoration(
-                hintText: 'Cari...',
+                hintText: 'Cari berdasarkan tugas atau mahasiswa...',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value; // Perbarui query pencarian
+                });
+              },
             ),
             const SizedBox(height: 10),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: fetchAllData, // Refresh function
                 child: ListView.builder(
-                  itemCount: allData.length,
+                  itemCount: filteredData.length,
                   itemBuilder: (context, index) {
-                    var data = allData[index];
+                    var data = filteredData[index];
                     return Card(
                       elevation: 4,
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       child: ListTile(
-                        title: Text(data['tugas']['tugas_nama']),
+                        title: Text(
+                          data['tugas']['tugas_nama'], // Nama tugas
+                          style: const TextStyle(
+                            fontWeight:
+                                FontWeight.bold, // Membuat nama tugas bold
+                            fontSize: 18, // Memperbesar ukuran teks
+                          ),
+                        ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                                 'Nama Mahasiswa: ${data['mahasiswa']['mahasiswa_nama']}'),
                             Text('Tanggal: ${data['tanggal']}'),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize:
+                              MainAxisSize.min, // Menjaga trailing tetap kecil
+                          children: [
+                            Icon(
+                              data['status'] == 'terima' // Kondisi status
+                                  ? Icons.check_circle
+                                  : data['status'] == 'tolak'
+                                      ? Icons.cancel
+                                      : Icons
+                                          .hourglass_empty, // Icon berubah sesuai status
+                              color: data['status'] == 'terima'
+                                  ? Colors.green // Warna hijau untuk diterima
+                                  : data['status'] == 'tolak'
+                                      ? Colors.red // Warna merah untuk ditolak
+                                      : Colors
+                                          .yellow, // Warna kuning untuk belum diperbarui
+                              size: 24, // Ukuran ikon
+                            ),
+                            const SizedBox(
+                                width: 5), // Memberi jarak antara ikon dan teks
                             Text(
-                                'Status: ${data['status'] ?? 'Belum Diperbarui'}'),
+                              data['status'] == 'terima'
+                                  ? 'Diterima'
+                                  : data['status'] == 'tolak'
+                                      ? 'Ditolak'
+                                      : 'Belum Dicek', // Status dalam teks
+                              style: const TextStyle(
+                                fontSize: 16, // Memperbesar ukuran teks
+                                fontWeight:
+                                    FontWeight.bold, // Membuat teks bold
+                              ),
+                            ),
                           ],
                         ),
                         onTap: () {
@@ -302,7 +365,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             const SizedBox(height: 10),
             Text('Tanggal Pengumpulan: ${taskDetail['tanggal']}'),
             const SizedBox(height: 10),
-            Text('Status: ${taskDetail['status'] ?? 'Belum Diperbarui'}'),
+            Text('Status: ${taskDetail['status'] ?? 'Belum Dicek'}'),
             const SizedBox(height: 20),
             if (!isTaskAccepted && !isTaskRejected)
               ElevatedButton(
