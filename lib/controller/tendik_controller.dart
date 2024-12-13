@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:sistem_kompen/config.dart';
 import 'package:http/http.dart' as http;
-import 'package:sistem_kompen/core/shared_prefix.dart';
 
 class TendikController {
   final String base_domain;

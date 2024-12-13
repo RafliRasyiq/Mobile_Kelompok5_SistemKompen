@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistem_kompen/dosen.dart';
 import 'package:sistem_kompen/mahasiswa.dart';
 import 'package:sistem_kompen/tendik.dart';
 import '../config.dart';
 import '../controller/login_controller.dart';
-import '../dosen/homepage_dosen.dart';
-import '../mahasiswa/homepage_mahasiswa.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

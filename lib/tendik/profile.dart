@@ -185,7 +185,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return EditProfileDialog();
+        return const EditProfileDialog();
       },
     );
   }
@@ -194,7 +194,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return EditPasswordDialog();
+        return const EditPasswordDialog();
       },
     );
   }

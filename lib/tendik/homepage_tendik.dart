@@ -1,10 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistem_kompen/controller/tendik_controller.dart';
 import 'package:sistem_kompen/login/login.dart';
-import '../config.dart';
 import 'package:sistem_kompen/core/shared_prefix.dart';
 import 'package:sistem_kompen/tendik/profile.dart';
 
@@ -103,7 +101,47 @@ class _DashboardTendikState extends State<DashboardTendik> {
                                 children: [
                                   Icon(Icons.add_to_photos, color: Colors.black),
                                   const SizedBox(width: 15),
-                                  Text('Tambah Tugas'),
+                                  Text('Manage Kompen'),
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem<int>(
+                              value: 3,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  const SizedBox(width: 15),
+                                  Text('Daftar Mahasiswa Alpha'),
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem<int>(
+                              value: 4,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  const SizedBox(width: 15),
+                                  Text('Daftar Mahasiswa Kompen'),
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem<int>(
+                              value: 5,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  const SizedBox(width: 15),
+                                  Text('Update Kompen Selesai'),
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem<int>(
+                              value: 6,
+                              child: Row(
+                                children: [
+                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  const SizedBox(width: 15),
+                                  Text('Cek Validasi QR'),
                                 ],
                               ),
                             ),
