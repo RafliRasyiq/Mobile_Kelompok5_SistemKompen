@@ -111,9 +111,9 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                               value: 3,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.view_timeline_rounded, color: Colors.black),
                                   const SizedBox(width: 15),
-                                  Text('Update Progress Tugas'),
+                                  Text('Progress Tugas'),
                                 ],
                               ),
                             ),
@@ -121,7 +121,7 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                               value: 4,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.domain_verification_rounded, color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Update Kompen Selesai'),
                                 ],
@@ -131,7 +131,7 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                               value: 5,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.local_print_shop_rounded, color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Cetak Hasil Kompen'),
                                 ],
@@ -141,7 +141,7 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                               value: 6,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.document_scanner_rounded, color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Cek Validasi QR'),
                                 ],
@@ -175,7 +175,7 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                               value: 1,
                               child: Row(
                                 children: [
-                                  Icon(Icons.menu_book, color: Colors.black),
+                                  Icon(Icons.contact_phone_rounded, color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Profile'),
                                 ],

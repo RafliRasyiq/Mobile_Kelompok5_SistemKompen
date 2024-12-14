@@ -179,7 +179,7 @@ class _DashboardTendikState extends State<DashboardTendik> {
                               value: 1,
                               child: Row(
                                 children: [
-                                  Icon(Icons.menu_book, color: Colors.black),
+                                  Icon(Icons.contact_phone_rounded, color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Profile'),
                                 ],
