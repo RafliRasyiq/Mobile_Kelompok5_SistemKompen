@@ -13,7 +13,7 @@ class DataListScreen extends StatefulWidget {
 }
 
 class _DataListScreenState extends State<DataListScreen> {
-  String _searchQuery = ""; 
+  String _searchQuery = "";
 
   @override
   void initState() {
@@ -44,7 +44,8 @@ class _DataListScreenState extends State<DataListScreen> {
     }
     return allData.where((item) {
       String tugasNama = item['tugas']['tugas_nama']?.toLowerCase() ?? '';
-      String mahasiswaNama = item['mahasiswa']['mahasiswa_nama']?.toLowerCase() ?? '';
+      String mahasiswaNama =
+          item['mahasiswa']['mahasiswa_nama']?.toLowerCase() ?? '';
       return tugasNama.contains(_searchQuery.toLowerCase()) ||
           mahasiswaNama.contains(_searchQuery.toLowerCase());
     }).toList();
@@ -52,7 +53,8 @@ class _DataListScreenState extends State<DataListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> filteredData = getFilteredData(); // Data after applying filter
+    List<dynamic> filteredData =
+        getFilteredData(); // Data after applying filter
 
     return Scaffold(
       appBar: AppBar(
@@ -279,18 +281,108 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            Text('Nama Mahasiswa: ${taskDetail['mahasiswa']['mahasiswa_nama']}'),
+            Text(
+                'Nama Mahasiswa: ${taskDetail['mahasiswa']['mahasiswa_nama']}'),
             const SizedBox(height: 10),
             Text('Tanggal Pengumpulan: ${taskDetail['tanggal']}'),
             const SizedBox(height: 10),
             Text('Status: ${taskDetail['status']}'),
             const SizedBox(height: 10),
-            
+
             // Conditionally show the rejection reason (alasan) if the status is 'tolak'
             if (taskDetail['status'] == 'tolak')
               Text('Alasan Tolak: ${taskDetail['alasan']}'),
             const SizedBox(height: 20),
-            
+// Display Foto Sebelum and Foto Sesudah images if available
+            if (taskDetail['foto_sebelum'] != null &&
+                taskDetail['foto_sebelum'].isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Foto Sebelum:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 5),
+                  Container(
+                    width: 200, // Adjust width as needed
+                    height: 200, // Adjust height as needed
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: taskDetail['foto_sebelum'] != null &&
+                                taskDetail['foto_sebelum'].isNotEmpty
+                            ? NetworkImage(
+                                "http://your-backend-domain/${taskDetail['foto_sebelum']}")
+                            : const AssetImage('assets/images/default.jpg')
+                                as ImageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius
+                          .zero, // This makes it a square with sharp edges
+                      border: Border.all(
+                        color: Colors.grey, // Optional: Add border if you want
+                        width: 1,
+                      ),
+                    ),
+                    child: taskDetail['foto_sebelum'] == null ||
+                            taskDetail['foto_sebelum'].isEmpty
+                        ? const Center(
+                            child: Text(
+                              "FS", // Placeholder text
+                              style:
+                                  TextStyle(fontSize: 40, color: Colors.white),
+                            ),
+                          )
+                        : null,
+                  ),
+                ],
+              ),
+            const SizedBox(height: 20),
+            if (taskDetail['foto_sesudah'] != null &&
+                taskDetail['foto_sesudah'].isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Foto Sesudah:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 5),
+                  Container(
+                    width: 200, // Adjust width as needed
+                    height: 200, // Adjust height as needed
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: taskDetail['foto_sesudah'] != null &&
+                                taskDetail['foto_sesudah'].isNotEmpty
+                            ? NetworkImage(
+                                "http://your-backend-domain/${taskDetail['foto_sesudah']}")
+                            : const AssetImage('assets/images/default.jpg')
+                                as ImageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius
+                          .zero, // This makes it a square with sharp edges
+                      border: Border.all(
+                        color: Colors.grey, // Optional: Add border if you want
+                        width: 1,
+                      ),
+                    ),
+                    child: taskDetail['foto_sesudah'] == null ||
+                            taskDetail['foto_sesudah'].isEmpty
+                        ? const Center(
+                            child: Text(
+                              "FS", // Placeholder text
+                              style:
+                                  TextStyle(fontSize: 40, color: Colors.white),
+                            ),
+                          )
+                        : null,
+                  ),
+                ],
+              ),
+            const SizedBox(height: 20),
+
             // Buttons for changing the status
             if (!isTaskAccepted && !isTaskRejected)
               Row(
@@ -299,7 +391,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   ElevatedButton(
                     onPressed: updateStatusTerima,
                     child: const Text('Terima'),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.green),
                   ),
                   ElevatedButton(
                     onPressed: () async {
@@ -332,14 +425,15 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                           ],
                         ),
                       );
-                      
+
                       // If a reason is provided, update the status to 'tolak'
                       if (result != null && result.isNotEmpty) {
                         updateStatusTolak(result);
                       }
                     },
                     child: const Text('Tolak'),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   ),
                 ],
               ),
