@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistem_kompen/controller/mahasiswa_controller.dart';
-import 'package:sistem_kompen/mahasiswa.dart';
 import 'package:sistem_kompen/core/shared_prefix.dart';
 import 'package:sistem_kompen/mahasiswa/homepage_mahasiswa.dart';
 import 'package:sistem_kompen/login/login.dart';
@@ -20,8 +18,6 @@ class ProfileMahasiswa extends StatefulWidget {
 }
 
 class _ProfileMahasiswaState extends State<ProfileMahasiswa> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
   final url = Uri.parse(Config.base_domain);
 
   String userId = '';
@@ -32,7 +28,7 @@ class _ProfileMahasiswaState extends State<ProfileMahasiswa> {
   String jurusan = 'Loading...';
   String prodi = 'Loading...';
   String kelas = 'Loading...';
-  String no_telp = 'Loading...';
+  String noTelp = 'Loading...';
 
   bool isLoading = true;
 
@@ -63,7 +59,7 @@ class _ProfileMahasiswaState extends State<ProfileMahasiswa> {
         jurusan = data['jurusan'] ?? '-';
         prodi = data['prodi'] ?? '-';
         kelas = data['kelas'] ?? '-';
-        no_telp = data['no_telp'] ?? '-';
+        noTelp = data['no_telp'] ?? '-';
       });
       print(data['message']);
     } catch (e) {
@@ -119,15 +115,12 @@ class _ProfileMahasiswaState extends State<ProfileMahasiswa> {
                   top: 50,
                   left: 30,
                   right: 30,
-                  child: Container(
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundImage: foto != null && foto.isNotEmpty
-                          ? NetworkImage("$url/$foto")
-                          : const AssetImage(
-                                  'assets/images/default_profile.png')
-                              as ImageProvider,
-                    ),
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: foto.isNotEmpty
+                        ? NetworkImage("$url/$foto")
+                        : const AssetImage('assets/images/default_profile.png')
+                            as ImageProvider,
                   ),
                 ),
               ],
@@ -143,7 +136,7 @@ class _ProfileMahasiswaState extends State<ProfileMahasiswa> {
                   ProfileInfoField(label: "Jurusan", value: jurusan),
                   ProfileInfoField(label: "Program Studi", value: prodi),
                   ProfileInfoField(label: "Kelas", value: kelas),
-                  ProfileInfoField(label: "No. Telephone", value: no_telp),
+                  ProfileInfoField(label: "No. Telephone", value: noTelp),
                 ],
               ),
             ),
@@ -227,8 +220,8 @@ class ProfileInfoField extends StatelessWidget {
 }
 
 class EditProfileDialog extends StatelessWidget {
-  String token;
-  String id;
+  final String token;
+  final String id;
 
   EditProfileDialog({super.key, required this.token, required this.id});
 
@@ -275,7 +268,6 @@ class EditProfileDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            print("object");
             if (_usernameController.text == "" ||
                 _nameController.text == "" ||
                 _teleponController.text == "") {
@@ -306,8 +298,8 @@ class EditProfileDialog extends StatelessWidget {
 }
 
 class EditPasswordDialog extends StatelessWidget {
-  String token;
-  String id;
+  final String token;
+  final String id;
 
   EditPasswordDialog({super.key, required this.token, required this.id});
 
@@ -350,7 +342,6 @@ class EditPasswordDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            print("object");
             if (_passwordController.text == "") {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(

@@ -1,16 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:sistem_kompen/profile.dart';
-import 'package:sistem_kompen/show_profile.dart';
+import 'package:sistem_kompen/kompen/detail_mhs_alpha.dart';
 import 'dart:convert';
-import 'dart:math';
 import 'package:sistem_kompen/config.dart';
 import 'package:http/http.dart' as http;
-
-final TextEditingController nameController_update = TextEditingController();
-final TextEditingController bankController_update = TextEditingController();
-final TextEditingController alamatController_update = TextEditingController();
 
 class MahasiswaAlphaPagge extends StatefulWidget {
   final String token;
@@ -29,13 +23,6 @@ class _AlphaMahasiswaState extends State<MahasiswaAlphaPagge> {
   void initState() {
     super.initState();
     _showAllData(widget.token); // Load data when the widget initializes
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _showAllData(widget.token);
-    }
   }
 
   void _showAllData(String token) async {
@@ -140,7 +127,8 @@ class _AlphaMahasiswaState extends State<MahasiswaAlphaPagge> {
                             // Table header (fixed inside the container)
                             Container(
                               decoration: BoxDecoration(
-                                  border: Border.all(color: const Color(0xFFEEEEEE)),
+                                  border: Border.all(
+                                      color: const Color(0xFFEEEEEE)),
                                   color: const Color(0xFFEEEEEE)),
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
@@ -178,53 +166,65 @@ class _AlphaMahasiswaState extends State<MahasiswaAlphaPagge> {
                             // Scrollable table body
                             Expanded(
                               child: all_data.isEmpty
-          ? const Center(child: Text("Tidak ada data yang ditampilkan"))
-          : ListView.builder(
-                                itemCount: all_data.length,
-                                itemBuilder: (context, index) {
-                                  final row = all_data[index];
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(color: const Color(0xFFEEEEEE))),
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        // Nama Lengkap (truncated)
-                                        Expanded(
-                                          flex: 5,
-                                          child: Text(
-                                            row['mahasiswa_nama'],
-                                            textAlign: TextAlign.left,
-                                            maxLines: 1, // Restrict to 1 line
-                                            overflow: TextOverflow
-                                                .ellipsis, // Ellipses for overflow
+                                  ? const Center(
+                                      child: Text(
+                                          "Tidak ada data yang ditampilkan"))
+                                  : ListView.builder(
+                                      itemCount: all_data.length,
+                                      itemBuilder: (context, index) {
+                                        final row = all_data[index];
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color:
+                                                      const Color(0xFFEEEEEE))),
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              // Nama Lengkap (truncated)
+                                              Expanded(
+                                                flex: 5,
+                                                child: Text(
+                                                  row['mahasiswa_nama'],
+                                                  textAlign: TextAlign.left,
+                                                  maxLines:
+                                                      1, // Restrict to 1 line
+                                                  overflow: TextOverflow
+                                                      .ellipsis, // Ellipses for overflow
+                                                ),
+                                              ),
+                                              // Open button
+                                              Expanded(
+                                                flex: 1,
+                                                child: IconButton(
+                                                  icon: const Icon(Icons
+                                                      .open_in_full_rounded),
+                                                  onPressed: () {
+                                                    String id =
+                                                        row['mahasiswa_id'];
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            DetailMahasiswaAlpha(token: widget.token, id: id),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                              // Alpha
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                  row['alpha'],
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        // Open button
-                                        Expanded(
-                                          flex: 1,
-                                          child: IconButton(
-                                            icon: const Icon(
-                                                Icons.open_in_full_rounded),
-                                            onPressed: () {
-                                              String id = row['mahasiswa_id'];
-                                              showProfileData(context, id);
-                                            },
-                                          ),
-                                        ),
-                                        // Alpha
-                                        Expanded(
-                                          flex: 2,
-                                          child: Text(
-                                            row['alpha'],
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ],
+                                        );
+                                      },
                                     ),
-                                  );
-                                },
-                              ),
                             ),
                           ],
                         ),
@@ -239,22 +239,4 @@ class _AlphaMahasiswaState extends State<MahasiswaAlphaPagge> {
       ),
     );
   }
-}
-
-void showProfileData(BuildContext context, String id) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ShowProfilePage(mahasiswaId: id),
-    ),
-  );
-}
-
-void profileData(BuildContext context, String id) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ProfilePage(id: id),
-    ),
-  );
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistem_kompen/controller/dosen_controller.dart';
-import 'package:sistem_kompen/dosen.dart';
 import 'package:sistem_kompen/core/shared_prefix.dart';
 import 'package:sistem_kompen/dosen/homepage_dosen.dart';
 import 'package:sistem_kompen/login/login.dart';
@@ -20,8 +18,6 @@ class ProfileDosen extends StatefulWidget {
 }
 
 class _ProfileDosenState extends State<ProfileDosen> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
   final url = Uri.parse(Config.base_domain);
 
   String userId = '';
@@ -110,15 +106,13 @@ class _ProfileDosenState extends State<ProfileDosen> {
                   top: 50,
                   left: 30,
                   right: 30,
-                  child: Container(
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundImage: foto != null && foto.isNotEmpty
-                          ? NetworkImage("$url/$foto")
-                          : const AssetImage(
-                                  'assets/images/default_profile.png')
-                              as ImageProvider,
-                    ),
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: foto.isNotEmpty
+                        ? NetworkImage("$url/$foto")
+                        : const AssetImage(
+                                'assets/images/default_profile.png')
+                            as ImageProvider,
                   ),
                 ),
               ],
@@ -214,8 +208,8 @@ class ProfileInfoField extends StatelessWidget {
 }
 
 class EditProfileDialog extends StatelessWidget {
-  String token;
-  String id;
+  final String token;
+  final String id;
 
   EditProfileDialog({super.key, required this.token, required this.id});
 
@@ -255,7 +249,6 @@ class EditProfileDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            print("object");
             if (_usernameController.text == "" || _nameController.text == "") {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Inputan masih kosong')),
@@ -279,8 +272,8 @@ class EditProfileDialog extends StatelessWidget {
 }
 
 class EditPasswordDialog extends StatelessWidget {
-  String token;
-  String id;
+  final String token;
+  final String id;
 
   EditPasswordDialog({super.key, required this.token, required this.id});
 
@@ -324,7 +317,6 @@ class EditPasswordDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            print("object");
             if (_passwordController.text == "") {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
