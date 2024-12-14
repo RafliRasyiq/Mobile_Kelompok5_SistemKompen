@@ -177,7 +177,9 @@ class _AlphaMahasiswaState extends State<MahasiswaAlphaPagge> {
                             ),
                             // Scrollable table body
                             Expanded(
-                              child: ListView.builder(
+                              child: all_data.isEmpty
+          ? const Center(child: Text("Tidak ada data yang ditampilkan"))
+          : ListView.builder(
                                 itemCount: all_data.length,
                                 itemBuilder: (context, index) {
                                   final row = all_data[index];
