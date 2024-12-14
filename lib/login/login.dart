@@ -5,6 +5,7 @@ import 'package:sistem_kompen/mahasiswa.dart';
 import 'package:sistem_kompen/tendik.dart';
 import '../config.dart';
 import '../controller/login_controller.dart';
+import 'package:sistem_kompen/login/registrasiMahasiswa.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -56,46 +57,48 @@ class _LoginFormState extends State<LoginForm> {
     final result = await _loginController.login(username, password);
     try {
       if (result['success']) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('token', result['data']['token']);
-      await prefs.setString('user_id', result['data']['user']['user_id']!.toString());
-      int levelId = result['data']['user']['level_id'];
-      String userId = result['data']['user']['user_id']!.toString();
-      if (levelId == 2) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DosenPage(token: result['data']['token'], id: userId)),
-        );
-      } else if (levelId == 3) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                TendikPage(token: result['data']['token'], id: userId),
-          ),
-        );
-      } else if (levelId == 5) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MahasiswaPage(token: result['data']['token'], id: userId),
-          ),
-        );
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', result['data']['token']);
+        await prefs.setString(
+            'user_id', result['data']['user']['user_id']!.toString());
+        int levelId = result['data']['user']['level_id'];
+        String userId = result['data']['user']['user_id']!.toString();
+        if (levelId == 2) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    DosenPage(token: result['data']['token'], id: userId)),
+          );
+        } else if (levelId == 3) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  TendikPage(token: result['data']['token'], id: userId),
+            ),
+          );
+        } else if (levelId == 5) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  MahasiswaPage(token: result['data']['token'], id: userId),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Pengguna tidak valid')),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Pengguna tidak valid')),
+          SnackBar(content: Text(result['message'] ?? 'Login gagal')),
         );
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result['message'] ?? 'Login gagal')),
-      );
-    }
     } catch (e) {
       print("error $e");
     }
-    
   }
 
   @override
@@ -232,6 +235,33 @@ class _LoginFormState extends State<LoginForm> {
                   ],
                 ),
               ),
+            const SizedBox(height: 16), // Jarak antar elemen
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const RegistrasiMahasiswa()),
+                );
+              },
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Belum Memiliki Akun?",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(width: 4),
+                  Text(
+                    "Daftar Disini",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.orange,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -265,112 +295,4 @@ class _LoginFormState extends State<LoginForm> {
       },
     );
   }
-
-
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   final screenWidth = MediaQuery.of(context).size.width;
-  //   final screenHeight = MediaQuery.of(context).size.height;
-
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     crossAxisAlignment: CrossAxisAlignment.center,
-  //     children: [
-  //       Text(
-  //         'LOGIN',
-  //         style: GoogleFonts.poppins(
-  //           color: Colors.black,
-  //           fontSize: 40,
-  //           fontWeight: FontWeight.bold,
-  //         ),
-  //       ),
-  //       SizedBox(height: screenHeight * 0.03),
-  //       Container(
-  //         width: screenWidth * 0.85,
-  //         padding: const EdgeInsets.all(20.0),
-  //         decoration: BoxDecoration(
-  //           color: const Color(0xFF0D47A1),
-  //           borderRadius: BorderRadius.circular(20),
-  //         ),
-  //         child: Column(
-  //           children: [
-  //             Align(
-  //               alignment: Alignment.centerLeft,
-  //               child: Text(
-  //                 'Username',
-  //                 style: GoogleFonts.montserrat(
-  //                   color: Colors.white,
-  //                   fontSize: 20,
-  //                 ),
-  //               ),
-  //             ),
-  //             const SizedBox(height: 10),
-  //             Container(
-  //               height: 50,
-  //               decoration: BoxDecoration(
-  //                 color: Colors.white,
-  //                 borderRadius: BorderRadius.circular(20),
-  //               ),
-  //               child: TextField(
-  //                 controller: _usernameController,
-  //                 decoration: const InputDecoration(
-  //                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
-  //                   border: InputBorder.none,
-  //                 ),
-  //               ),
-  //             ),
-  //             const SizedBox(height: 20),
-  //             Align(
-  //               alignment: Alignment.centerLeft,
-  //               child: Text(
-  //                 'Password',
-  //                 style: GoogleFonts.montserrat(
-  //                   color: Colors.white,
-  //                   fontSize: 20,
-  //                 ),
-  //               ),
-  //             ),
-  //             const SizedBox(height: 10),
-  //             Container(
-  //               height: 50,
-  //               decoration: BoxDecoration(
-  //                 color: Colors.white,
-  //                 borderRadius: BorderRadius.circular(20),
-  //               ),
-  //               child: TextField(
-  //                 controller: _passwordController,
-  //                 obscureText: true,
-  //                 decoration: const InputDecoration(
-  //                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
-  //                   border: InputBorder.none,
-  //                 ),
-  //               ),
-  //             ),
-  //             const SizedBox(height: 30),
-  //             ElevatedButton(
-  //               style: ElevatedButton.styleFrom(
-  //                 backgroundColor: const Color(0xFFEFB509),
-  //                 shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(20),
-  //                 ),
-  //                 minimumSize: const Size(100, 40),
-  //               ),
-  //               onPressed: () {
-  //                 _handleLogin(context);
-  //               },
-  //               child: Text(
-  //                 'LOGIN',
-  //                 style: GoogleFonts.poppins(
-  //                   color: Colors.black,
-  //                   fontSize: 16,
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
 }

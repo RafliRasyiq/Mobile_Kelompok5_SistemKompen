@@ -7,6 +7,7 @@ import 'package:sistem_kompen/kompen/daftar_mhs_kompen.dart';
 import 'package:sistem_kompen/login/login.dart';
 import 'package:sistem_kompen/core/shared_prefix.dart';
 import 'package:sistem_kompen/tendik/profile.dart';
+import 'package:sistem_kompen/tendik/update_kompen_selesai.dart';
 
 class DashboardTendik extends StatefulWidget {
   final String token;
@@ -418,6 +419,13 @@ class _DashboardTendikState extends State<DashboardTendik> {
           context,
           MaterialPageRoute(
               builder: (context) => KompenMahasiswaPage(token: tokens)),
+        );
+        break;
+        case 5:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DataListScreen(token: tokens, id: widget.id,)),
         );
         break;
     }

@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:sistem_kompen/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:sistem_kompen/core/shared_prefix.dart';
+import 'package:sistem_kompen/tendik/homepage_tendik.dart';
 
 var allData = [];
 String _searchQuery = ""; // Search query for filtering
 
 class DataListScreen extends StatefulWidget {
   final String token;
-  const DataListScreen({super.key, required this.token});
+  final String id;
+  const DataListScreen({super.key, required this.token, required this.id});
 
   @override
   _DataListScreenState createState() => _DataListScreenState();
@@ -98,7 +100,18 @@ class _DataListScreenState extends State<DataListScreen> {
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: const Color(0xFF2D2766),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      DashboardTendik(token: widget.token, id: widget.id)),
+            );
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -119,81 +132,89 @@ class _DataListScreenState extends State<DataListScreen> {
             ),
             const SizedBox(height: 10),
             Expanded(
-              child: RefreshIndicator(
-                onRefresh: fetchAllData, // Refresh function to fetch data again
-                child: ListView.builder(
-                  itemCount: filteredData.length,
-                  itemBuilder: (context, index) {
-                    var data = filteredData[index];
+              child: allData.isEmpty
+                  ? const Center(child: Text("Tidak ada data yang ditampilkan"))
+                  : RefreshIndicator(
+                      onRefresh:
+                          fetchAllData, // Refresh function to fetch data again
+                      child: ListView.builder(
+                        itemCount: filteredData.length,
+                        itemBuilder: (context, index) {
+                          var data = filteredData[index];
 
-                    return Card(
-                      elevation: 4,
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      child: data.isEmpty
-                          ? const Center(
-                              child: Text("Tidak ada data yang ditampilkan"))
-                          : ListTile(
-                              title: Text(
-                                data['tugas']
-                                    ['tugas_nama'], // Display task name
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      'Nama Mahasiswa: ${data['mahasiswa']['mahasiswa_nama']}'),
-                                  Text('Tanggal: ${data['tanggal']}'),
-                                ],
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    data['status'] == 'terima'
-                                        ? Icons.check_circle
-                                        : data['status'] == 'tolak'
-                                            ? Icons.cancel
-                                            : Icons.hourglass_empty,
-                                    color: data['status'] == 'terima'
-                                        ? Colors.green
-                                        : data['status'] == 'tolak'
-                                            ? Colors.red
-                                            : Colors.yellow,
-                                    size: 24,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    data['status'] == 'terima'
-                                        ? 'Diterima'
-                                        : data['status'] == 'tolak'
-                                            ? 'Ditolak'
-                                            : 'Belum Dicek',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                          return Card(
+                            elevation: 4,
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            child: data.isEmpty
+                                ? const Center(
+                                    child:
+                                        Text("Tidak ada data yang ditampilkan"))
+                                : ListTile(
+                                    title: Text(
+                                      data['tugas']
+                                          ['tugas_nama'], // Display task name
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
                                     ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            'Nama Mahasiswa: ${data['mahasiswa']['mahasiswa_nama']}'),
+                                        Text('Tanggal: ${data['tanggal']}'),
+                                      ],
+                                    ),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          data['status'] == 'terima'
+                                              ? Icons.check_circle
+                                              : data['status'] == 'tolak'
+                                                  ? Icons.cancel
+                                                  : Icons.hourglass_empty,
+                                          color: data['status'] == 'terima'
+                                              ? Colors.green
+                                              : data['status'] == 'tolak'
+                                                  ? Colors.red
+                                                  : Colors.yellow,
+                                          size: 24,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          data['status'] == 'terima'
+                                              ? 'Diterima'
+                                              : data['status'] == 'tolak'
+                                                  ? 'Ditolak'
+                                                  : 'Belum Dicek',
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    onTap: () {
+                                      String id =
+                                          data['pengumpulan_id'].toString();
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              TaskDetailScreen(
+                                                  token: widget.token,
+                                                  pengumpulanId: id, id: widget.id),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                ],
-                              ),
-                              onTap: () {
-                                String id = data['pengumpulan_id'].toString();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => TaskDetailScreen(
-                                        token: widget.token, pengumpulanId: id),
-                                  ),
-                                );
-                              },
-                            ),
-                    );
-                  },
-                ),
-              ),
+                          );
+                        },
+                      ),
+                    ),
             ),
           ],
         ),
@@ -204,10 +225,11 @@ class _DataListScreenState extends State<DataListScreen> {
 
 class TaskDetailScreen extends StatefulWidget {
   final String token;
+  final String id;
   final String pengumpulanId;
 
   const TaskDetailScreen(
-      {super.key, required this.pengumpulanId, required this.token});
+      {super.key, required this.pengumpulanId, required this.token, required this.id});
 
   @override
   _TaskDetailScreenState createState() => _TaskDetailScreenState();
@@ -343,13 +365,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             ),
             textAlign: TextAlign.center,
           ),
+          backgroundColor: const Color(0xFF2D2766),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => DataListScreen(token: widget.token)),
+                    builder: (context) => DataListScreen(token: widget.token, id: widget.id)),
               );
             },
           ),
@@ -369,14 +392,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           ),
           textAlign: TextAlign.center,
         ),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: const Color(0xFF2D2766),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => DataListScreen(token: widget.token)),
+                  builder: (context) => DataListScreen(token: widget.token, id: widget.id)),
             );
           },
         ),

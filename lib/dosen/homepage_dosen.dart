@@ -426,7 +426,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => DataListScreen(token: tokens)),
+              builder: (context) => DataListScreen(token: tokens, id: widget.id)),
         );
         break;
     }

@@ -342,26 +342,30 @@ class EditPasswordDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            if (_passwordController.text == "") {
+            if (_passwordController.text.isEmpty) {
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Inputan masih kosong')),
-              );
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Inputan Masih Kosong')),
+                );
+              });
             } else if (_passwordController.text !=
                 _confirmPasswordController.text) {
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text('Konfirmasi password tidak sesuai')),
-              );
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text('Konfirmasi password tidak sesuai')),
+                );
+              });
             } else {
               _mahasiswaController.updatePassword(
-                  token, _idController.text, _passwordController.text);
+                  token, id, _passwordController.text);
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        ProfileMahasiswa(token: token, id: id)),
+                  builder: (context) => ProfileMahasiswa(token: token, id: id),
+                ),
               );
             }
           },
