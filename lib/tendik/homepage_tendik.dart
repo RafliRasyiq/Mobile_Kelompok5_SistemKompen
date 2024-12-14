@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:sistem_kompen/controller/tendik_controller.dart';
+import 'package:sistem_kompen/kompen/daftar_mhs_alpha.dart';
+import 'package:sistem_kompen/kompen/daftar_mhs_kompen.dart';
 import 'package:sistem_kompen/login/login.dart';
 import 'package:sistem_kompen/core/shared_prefix.dart';
 import 'package:sistem_kompen/tendik/profile.dart';
@@ -74,7 +76,8 @@ class _DashboardTendikState extends State<DashboardTendik> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         PopupMenuButton<int>(
-                          icon: const Icon(Icons.menu_rounded, color: Colors.white),
+                          icon: const Icon(Icons.menu_rounded,
+                              color: Colors.white),
                           onSelected: (item) => onSelectedMenu(context, item),
                           itemBuilder: (context) => [
                             PopupMenuItem<int>(
@@ -99,7 +102,8 @@ class _DashboardTendikState extends State<DashboardTendik> {
                               value: 2,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.add_to_photos,
+                                      color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Manage Kompen'),
                                 ],
@@ -109,7 +113,7 @@ class _DashboardTendikState extends State<DashboardTendik> {
                               value: 3,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.list_rounded, color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Daftar Mahasiswa Alpha'),
                                 ],
@@ -119,7 +123,7 @@ class _DashboardTendikState extends State<DashboardTendik> {
                               value: 4,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.list_rounded, color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Daftar Mahasiswa Kompen'),
                                 ],
@@ -129,7 +133,8 @@ class _DashboardTendikState extends State<DashboardTendik> {
                               value: 5,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.domain_verification_outlined,
+                                      color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Update Kompen Selesai'),
                                 ],
@@ -139,7 +144,8 @@ class _DashboardTendikState extends State<DashboardTendik> {
                               value: 6,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.document_scanner_rounded,
+                                      color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Cek Validasi QR'),
                                 ],
@@ -396,6 +402,20 @@ class _DashboardTendikState extends State<DashboardTendik> {
         break;
       case 2:
         // Handle Logout action
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MahasiswaAlphaPagge(token: tokens)),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => KompenMahasiswaPage(token: tokens)),
+        );
         break;
     }
   }
