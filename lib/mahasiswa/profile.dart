@@ -78,9 +78,18 @@ class _ProfileMahasiswaState extends State<ProfileMahasiswa> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile"),
+        title: const Text(
+          "Profile",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: const Color(0xFF2D2766),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.push(
               context,
@@ -94,18 +103,39 @@ class _ProfileMahasiswaState extends State<ProfileMahasiswa> {
       body: Center(
         child: Column(
           children: <Widget>[
-            const SizedBox(height: 20),
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: foto != null && foto.isNotEmpty
-                  ? NetworkImage("$url/$foto")
-                  : const AssetImage('assets/images/default_profile.png')
-                      as ImageProvider,
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  height: 100,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/Rectangle 9.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 50,
+                  left: 30,
+                  right: 30,
+                  child: Container(
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: foto != null && foto.isNotEmpty
+                          ? NetworkImage("$url/$foto")
+                          : const AssetImage(
+                                  'assets/images/default_profile.png')
+                              as ImageProvider,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 60),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 children: <Widget>[
                   ProfileInfoField(label: "Username", value: username),
                   ProfileInfoField(label: "Nama Lengkap", value: nama),
@@ -117,7 +147,6 @@ class _ProfileMahasiswaState extends State<ProfileMahasiswa> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 _idController.text = userId;
@@ -264,7 +293,8 @@ class EditProfileDialog extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ProfileMahasiswa(token: token, id: id)),
+                    builder: (context) =>
+                        ProfileMahasiswa(token: token, id: id)),
               );
             }
           },
