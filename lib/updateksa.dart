@@ -1,44 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-
-final dio = Dio(BaseOptions(
-  followRedirects: true, // Mengaktifkan pengalihan otomatis
-  maxRedirects: 5, // Batasi jumlah pengalihan
-  validateStatus: (status) {
-    // Mengizinkan status 302 tanpa menyebabkan exception
-    return (status != null && status >= 200 && status < 300) || status == 302;
-  },
-));
+import 'config.dart'; // import the Dio and URLs
 
 var allData = [];
-String urlDomain = "http://192.168.189.218:8000/";
-String urlAllData = urlDomain + "api/all_data";
-String urlShowData = urlDomain + "api/show_data";
-String urlUpdateStatus = urlDomain + "api/update_status";
+String _searchQuery = ""; // Search query for filtering
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Task Status',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-      ),
-      home: const DataListScreen(),
-      routes: {
-        '/login': (context) => const LoginScreen(),
-      },
-    );
-  }
-}
-
-// Screen to display all tasks
 class DataListScreen extends StatefulWidget {
   const DataListScreen({super.key});
 
@@ -47,7 +13,7 @@ class DataListScreen extends StatefulWidget {
 }
 
 class _DataListScreenState extends State<DataListScreen> {
-  String _searchQuery = ""; // Variabel untuk menyimpan query pencarian
+  String _searchQuery = ""; 
 
   @override
   void initState() {
@@ -71,15 +37,14 @@ class _DataListScreenState extends State<DataListScreen> {
     }
   }
 
-  // Fungsi untuk menyaring data berdasarkan query pencarian
+  // Function to filter data based on the search query
   List<dynamic> getFilteredData() {
     if (_searchQuery.isEmpty) {
-      return allData; // Tampilkan semua data jika pencarian kosong
+      return allData; // Show all data if the search query is empty
     }
     return allData.where((item) {
       String tugasNama = item['tugas']['tugas_nama']?.toLowerCase() ?? '';
-      String mahasiswaNama =
-          item['mahasiswa']['mahasiswa_nama']?.toLowerCase() ?? '';
+      String mahasiswaNama = item['mahasiswa']['mahasiswa_nama']?.toLowerCase() ?? '';
       return tugasNama.contains(_searchQuery.toLowerCase()) ||
           mahasiswaNama.contains(_searchQuery.toLowerCase());
     }).toList();
@@ -87,7 +52,7 @@ class _DataListScreenState extends State<DataListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> filteredData = getFilteredData(); // Data hasil filter
+    List<dynamic> filteredData = getFilteredData(); // Data after applying filter
 
     return Scaffold(
       appBar: AppBar(
@@ -99,6 +64,7 @@ class _DataListScreenState extends State<DataListScreen> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
+            // Search Bar to filter the data based on task or student name
             TextField(
               decoration: const InputDecoration(
                 hintText: 'Cari berdasarkan tugas atau mahasiswa...',
@@ -107,14 +73,14 @@ class _DataListScreenState extends State<DataListScreen> {
               ),
               onChanged: (value) {
                 setState(() {
-                  _searchQuery = value; // Perbarui query pencarian
+                  _searchQuery = value; // Update the search query
                 });
               },
             ),
             const SizedBox(height: 10),
             Expanded(
               child: RefreshIndicator(
-                onRefresh: fetchAllData, // Refresh function
+                onRefresh: fetchAllData, // Refresh function to fetch data again
                 child: ListView.builder(
                   itemCount: filteredData.length,
                   itemBuilder: (context, index) {
@@ -124,11 +90,10 @@ class _DataListScreenState extends State<DataListScreen> {
                       margin: const EdgeInsets.symmetric(vertical: 8),
                       child: ListTile(
                         title: Text(
-                          data['tugas']['tugas_nama'], // Nama tugas
+                          data['tugas']['tugas_nama'], // Display task name
                           style: const TextStyle(
-                            fontWeight:
-                                FontWeight.bold, // Membuat nama tugas bold
-                            fontSize: 18, // Memperbesar ukuran teks
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
                           ),
                         ),
                         subtitle: Column(
@@ -140,36 +105,31 @@ class _DataListScreenState extends State<DataListScreen> {
                           ],
                         ),
                         trailing: Row(
-                          mainAxisSize:
-                              MainAxisSize.min, // Menjaga trailing tetap kecil
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              data['status'] == 'terima' // Kondisi status
+                              data['status'] == 'terima'
                                   ? Icons.check_circle
                                   : data['status'] == 'tolak'
                                       ? Icons.cancel
-                                      : Icons
-                                          .hourglass_empty, // Icon berubah sesuai status
+                                      : Icons.hourglass_empty,
                               color: data['status'] == 'terima'
-                                  ? Colors.green // Warna hijau untuk diterima
+                                  ? Colors.green
                                   : data['status'] == 'tolak'
-                                      ? Colors.red // Warna merah untuk ditolak
-                                      : Colors
-                                          .yellow, // Warna kuning untuk belum diperbarui
-                              size: 24, // Ukuran ikon
+                                      ? Colors.red
+                                      : Colors.yellow,
+                              size: 24,
                             ),
-                            const SizedBox(
-                                width: 5), // Memberi jarak antara ikon dan teks
+                            const SizedBox(width: 5),
                             Text(
                               data['status'] == 'terima'
                                   ? 'Diterima'
                                   : data['status'] == 'tolak'
                                       ? 'Ditolak'
-                                      : 'Belum Dicek', // Status dalam teks
+                                      : 'Belum Dicek',
                               style: const TextStyle(
-                                fontSize: 16, // Memperbesar ukuran teks
-                                fontWeight:
-                                    FontWeight.bold, // Membuat teks bold
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
@@ -196,7 +156,6 @@ class _DataListScreenState extends State<DataListScreen> {
   }
 }
 
-// Screen to display task details and update status
 class TaskDetailScreen extends StatefulWidget {
   final int pengumpulanId;
 
@@ -243,7 +202,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     }
   }
 
-  // Update task status to 'terima' without reason
+  // Update task status to 'terima' (accepted)
   void updateStatusTerima() async {
     try {
       Response response = await dio.post(urlUpdateStatus, data: {
@@ -269,7 +228,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     }
   }
 
-  // Update task status to 'tolak' with reason
+  // Update task status to 'tolak' (rejected) with reason
   void updateStatusTolak(String alasan) async {
     try {
       Response response = await dio.post(urlUpdateStatus, data: {
@@ -296,132 +255,96 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     }
   }
 
-  // Dialog for tolak button to enter reason
-  void showTolakDialog() {
-    final TextEditingController alasanController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Masukkan Alasan Tolak'),
-        content: TextField(
-          controller: alasanController,
-          maxLines: 3,
-          decoration: const InputDecoration(hintText: "Alasan"),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              String alasan = alasanController.text.trim();
-              if (alasan.isNotEmpty) {
-                updateStatusTolak(alasan);
-                Navigator.of(context).pop();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Alasan tidak boleh kosong!')),
-                );
-              }
-            },
-            child: const Text('kirim'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Batal'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (taskDetail == null) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Task Detail'),
-          centerTitle: true,
-          backgroundColor: Colors.deepPurple,
-        ),
+        appBar: AppBar(title: const Text('Detail Tugas')),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Task Detail'),
-        centerTitle: true,
+        title: const Text('Detail Tugas'),
         backgroundColor: Colors.deepPurple,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Tugas: ${taskDetail['tugas']['tugas_nama']}'),
-            const SizedBox(height: 10),
             Text(
-                'Nama Mahasiswa: ${taskDetail['mahasiswa']['mahasiswa_nama']}'),
+              'Nama Tugas: ${taskDetail['tugas']['tugas_nama']}',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Text('Nama Mahasiswa: ${taskDetail['mahasiswa']['mahasiswa_nama']}'),
             const SizedBox(height: 10),
             Text('Tanggal Pengumpulan: ${taskDetail['tanggal']}'),
             const SizedBox(height: 10),
-            Text('Status: ${taskDetail['status'] ?? 'Belum Dicek'}'),
+            Text('Status: ${taskDetail['status']}'),
+            const SizedBox(height: 10),
+            
+            // Conditionally show the rejection reason (alasan) if the status is 'tolak'
+            if (taskDetail['status'] == 'tolak')
+              Text('Alasan Tolak: ${taskDetail['alasan']}'),
             const SizedBox(height: 20),
+            
+            // Buttons for changing the status
             if (!isTaskAccepted && !isTaskRejected)
-              ElevatedButton(
-                onPressed: updateStatusTerima, // Directly accept without reason
-                child: const Text('Terima Tugas'),
-              ),
-            if (!isTaskAccepted && !isTaskRejected)
-              ElevatedButton(
-                onPressed:
-                    showTolakDialog, // Show dialog for entering rejection reason
-                child: const Text('Tolak Tugas'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: updateStatusTerima,
+                    child: const Text('Terima'),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      // Show dialog to get rejection reason
+                      String alasan = '';
+                      final result = await showDialog<String>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Alasan Tolak'),
+                          content: TextField(
+                            autofocus: true,
+                            decoration: const InputDecoration(
+                              hintText: 'Masukkan alasan',
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                alasan = value;
+                              });
+                            },
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, ''),
+                              child: const Text('Batal'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, alasan),
+                              child: const Text('Tolak'),
+                            ),
+                          ],
+                        ),
+                      );
+                      
+                      // If a reason is provided, update the status to 'tolak'
+                      if (result != null && result.isNotEmpty) {
+                        updateStatusTolak(result);
+                      }
+                    },
+                    child: const Text('Tolak'),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  ),
+                ],
               ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// Login Screen (example)
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-        backgroundColor: Colors.deepPurple,
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Example navigation
-            Navigator.pushReplacementNamed(context, '/');
-          },
-          child: const Text('Login'),
-        ),
-      ),
-    );
-  }
-}
-
-// Unknown Route Screen
-class UnknownRouteScreen extends StatelessWidget {
-  const UnknownRouteScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Unknown Route'),
-        backgroundColor: Colors.deepPurple,
-      ),
-      body: const Center(
-        child: Text('Route not found!'),
       ),
     );
   }
