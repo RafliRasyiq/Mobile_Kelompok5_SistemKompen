@@ -38,13 +38,13 @@ class RegisterController {
         }),
       );
 
-      print(response.body);
+      print("respon body= ${response.body}");
 
       // Memproses respons
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        print(data);
+        print("Printed data $data");
         return {
           'status': true,
           'data': data,

@@ -77,9 +77,9 @@ class _RegistrasiMahasiswaState extends State<RegistrasiMahasiswa> {
       try {
         final result = await _registrasiMahasiswa.register(username, password,
             namaLengkap, nim, noTelpon, jurusan, programStudi, kelas);
-        print(result['success']);
+        print(result['data']['success']);
         print(result['data']);
-        if (result['success'] == true) {
+        if (result['data']['success'] == true) {
           print('Pendaftaran berhasil!');
           // Call the success dialog
           // ignore: use_build_context_synchronously
