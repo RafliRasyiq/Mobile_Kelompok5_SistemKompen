@@ -22,9 +22,18 @@ class _DataListScreenState extends State<DataListScreen> {
   }
 
   // Fetch all tasks data
+  // Fetch all tasks data
   Future<void> fetchAllData() async {
     try {
-      Response response = await dio.get(urlAllData);
+      Response response = await dio.get(
+        urlAllData,
+        options: Options(
+          headers: {
+            'Authorization':
+                'Bearer $userToken',
+          },
+        ),
+      );
       print("All Data Response: ${response.data}");
       setState(() {
         allData = response.data['data'] ?? [];
@@ -181,9 +190,18 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   // Fetch task details
   void fetchTaskDetail() async {
     try {
-      Response response = await dio.post(urlShowData, data: {
-        'pengumpulan_id': widget.pengumpulanId,
-      });
+      Response response = await dio.post(
+        urlShowData,
+        data: {
+          'pengumpulan_id': widget.pengumpulanId,
+        },
+        options: Options(
+          headers: {
+            'Authorization':
+                'Bearer $userToken',
+          },
+        ),
+      );
       print("Task Detail Response: ${response.data}");
       if (response.data['success'] == true) {
         setState(() {
