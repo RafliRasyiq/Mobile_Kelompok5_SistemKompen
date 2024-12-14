@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sistem_kompen/kompen/daftar_mhs_alpha.dart';
+import 'package:sistem_kompen/kompen/daftar_mhs_kompen.dart';
 import 'dosen/homepage_dosen.dart';
 import 'dosen/profile.dart';
 
@@ -24,9 +26,9 @@ class _DosenPageState extends State<DosenPage> {
     // Inisialisasi halaman dengan token
     _pages = [
       DashboardDosen(token: widget.token, id: widget.id),
-      ProfilePage(
-        token: widget.token, id: widget.id
-      )
+      ProfilePage(token: widget.token, id: widget.id),
+      KompenMahasiswaPage(token: widget.token),
+      MahasiswaAlphaPagge(token: widget.token)
       //   Dashboard(token: widget.token), // Pass token ke Dashboard
       //   HistoryPage(),
       //   NotificationPage(),

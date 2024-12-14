@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:sistem_kompen/controller/dosen_controller.dart';
+import 'package:sistem_kompen/kompen/daftar_mhs_alpha.dart';
+import 'package:sistem_kompen/kompen/daftar_mhs_kompen.dart';
 import 'package:sistem_kompen/login/login.dart';
 import 'package:sistem_kompen/core/shared_prefix.dart';
 import 'package:sistem_kompen/dosen/profile.dart';
@@ -59,7 +61,6 @@ class _DashboardDosenState extends State<DashboardDosen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +76,8 @@ class _DashboardDosenState extends State<DashboardDosen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         PopupMenuButton<int>(
-                          icon: const Icon(Icons.menu_rounded, color: Colors.white),
+                          icon: const Icon(Icons.menu_rounded,
+                              color: Colors.white),
                           onSelected: (item) => onSelectedMenu(context, item),
                           itemBuilder: (context) => [
                             PopupMenuItem<int>(
@@ -100,7 +102,8 @@ class _DashboardDosenState extends State<DashboardDosen> {
                               value: 2,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.add_to_photos,
+                                      color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Manage Kompen'),
                                 ],
@@ -110,7 +113,8 @@ class _DashboardDosenState extends State<DashboardDosen> {
                               value: 3,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.list_rounded,
+                                      color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Daftar Mahasiswa Alpha'),
                                 ],
@@ -120,7 +124,8 @@ class _DashboardDosenState extends State<DashboardDosen> {
                               value: 4,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.list_rounded,
+                                      color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Daftar Mahasiswa Kompen'),
                                 ],
@@ -130,7 +135,8 @@ class _DashboardDosenState extends State<DashboardDosen> {
                               value: 5,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.domain_verification_outlined,
+                                      color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Update Kompen Selesai'),
                                 ],
@@ -140,7 +146,8 @@ class _DashboardDosenState extends State<DashboardDosen> {
                               value: 6,
                               child: Row(
                                 children: [
-                                  Icon(Icons.add_to_photos, color: Colors.black),
+                                  Icon(Icons.document_scanner_rounded,
+                                      color: Colors.black),
                                   const SizedBox(width: 15),
                                   Text('Cek Validasi QR'),
                                 ],
@@ -391,12 +398,25 @@ class _DashboardDosenState extends State<DashboardDosen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  DashboardDosen(token: tokens, id: user_id)),
+              builder: (context) => DashboardDosen(token: tokens, id: user_id)),
         );
         break;
       case 2:
         // Handle Logout action
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MahasiswaAlphaPagge(token: tokens)),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => KompenMahasiswaPage(token: tokens)),
+        );
         break;
     }
   }
@@ -407,7 +427,8 @@ class NotificationItem extends StatelessWidget {
   final String subtitle;
   final String time;
 
-  const NotificationItem({super.key, 
+  const NotificationItem({
+    super.key,
     required this.title,
     required this.subtitle,
     required this.time,
