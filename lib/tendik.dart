@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistem_kompen/kompen/daftar_mhs_kompen.dart';
 import 'tendik/homepage_tendik.dart';
 import 'tendik/profile.dart';
 
@@ -24,7 +25,8 @@ class _TendikPageState extends State<TendikPage> {
     // Inisialisasi halaman dengan token
     _pages = [
       DashboardTendik(token: widget.token, id: widget.id),
-      ProfilePage(token: widget.token, id: widget.id)
+      ProfileTendik(token: widget.token, id: widget.id),
+      KompenMahasiswaPage(token: widget.token)
       //   Dashboard(token: widget.token), // Pass token ke Dashboard
       //   HistoryPage(),
       //   NotificationPage(),

@@ -371,7 +371,7 @@ class _DashboardTendikState extends State<DashboardTendik> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ProfilePage(token: tokens, id: user_id)),
+              builder: (context) => ProfileTendik(token: tokens, id: user_id)),
         );
         break;
       case 2:

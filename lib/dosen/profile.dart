@@ -1,81 +1,66 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sistem_kompen/controller/dosen_controller.dart';
+import 'package:sistem_kompen/dosen.dart';
+import 'package:sistem_kompen/core/shared_prefix.dart';
+import 'package:sistem_kompen/dosen/homepage_dosen.dart';
+import 'package:sistem_kompen/login/login.dart';
+import '../config.dart';
 
-final dio = Dio();
-// var user_data;
-Map<String, dynamic> user_data = {
-  'mahasiswa_id': '',
-  'username': '',
-  'mahasiswa_nama': '',
-  'nim': '',
-  'jurusan': '',
-  'prodi': '',
-  'kelas': '',
-  'no_telp': '',
-  'password': '',
-  'foto': ''
-};
-final TextEditingController idController = TextEditingController();
-final TextEditingController nameController = TextEditingController();
-final TextEditingController usernameController = TextEditingController();
-final TextEditingController phoneController = TextEditingController();
-final TextEditingController passwordController = TextEditingController();
-final TextEditingController confirmPasswordController = TextEditingController();
+final TextEditingController _idController = TextEditingController();
 
-String url_domain = "http://192.168.67.179:8000/";
-String url_user_data = "${url_domain}api/user_data";
-String url_update_data = "${url_domain}api/edit_data";
-String url_update_pass = "${url_domain}api/edit_pass";
-
-class ProfilePage extends StatefulWidget {
+class ProfileDosen extends StatefulWidget {
   final String token;
   final String id;
 
-  const ProfilePage({super.key, required this.token, required this.id});
+  const ProfileDosen({super.key, required this.token, required this.id});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  _ProfileDosenState createState() => _ProfileDosenState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
+class _ProfileDosenState extends State<ProfileDosen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final url = Uri.parse(Config.base_domain);
+
+  String userId = '';
+  String nama = 'Loading...';
+  String username = 'Loading...';
+  String nip = 'Loading...';
+  String foto = 'Loading...';
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    fetchProfileData(widget.token); // Fetch data when the screen loads
+    _profileData(); // Fetch data when the screen loads
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('MyApp state = $state');
-    if (state == AppLifecycleState.resumed) {
-      fetchProfileData(widget.token);
-    }
-  }
-
-  void fetchProfileData(String token) async {
+  Future<void> _profileData() async {
     try {
-      final response = await dio.post(url_user_data, data: {'token': token});
-      if (response.data != null && response.data is Map<String, dynamic>) {
-        setState(() {
-          user_data = response.data;
-        });
-      } else {
-        print("Unexpected data format: ${response.data}");
-        setState(() {
-          user_data = {}; // Set to an empty map to avoid null issues
-        });
+      // Ambil token dari SharedPreferences jika diperlukan
+      final token = await Sharedpref.getToken();
+      final user_id = await Sharedpref.getUserId();
+
+      if (token == '') {
+        throw Exception('Token is missing');
       }
-    } catch (e) {
-      print("Error loading data: $e");
+
+      final data = await DosenController.profile(token, user_id);
+
       setState(() {
-        user_data = {}; // Set to an empty map to avoid null issues
+        userId = data['user_id'] ?? '-';
+        nama = data['nama'] ?? '-';
+        username = data['username'] ?? '-';
+        nip = data['nip'] ?? '-';
+        foto = data['foto'] ?? '-';
+      });
+      print(data['message']);
+    } catch (e) {
+      print('Error loading dashboard data: $e');
+      setState(() {
+        isLoading = false;
       });
     }
   }
@@ -88,7 +73,12 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/daftarAlpha');
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      DashboardDosen(token: widget.token, id: widget.id)),
+            );
           },
         ),
       ),
@@ -98,59 +88,34 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
             const SizedBox(height: 20),
             CircleAvatar(
               radius: 50,
-              backgroundImage: user_data['foto'] != null &&
-                      user_data['foto'].isNotEmpty
-                  ? NetworkImage(
-                      "http://your-backend-domain/${user_data['foto']}")
-                  : const AssetImage('public/images/default.jpg') as ImageProvider,
-              child: user_data['foto'] == null || user_data['foto'].isEmpty
-                  ? const Text(
-                      "RS",
-                      style: TextStyle(fontSize: 40, color: Colors.white),
-                    )
-                  : null,
+              backgroundImage: foto != null && foto.isNotEmpty
+                  ? NetworkImage("$url/$foto")
+                  : const AssetImage('assets/images/default_profile.png')
+                      as ImageProvider,
             ),
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: <Widget>[
-                  ProfileInfoField(
-                      label: "Username", value: user_data["username"]),
-                  ProfileInfoField(
-                      label: "Nama Lengkap",
-                      value: user_data['mahasiswa_nama'] ?? ""),
-                  ProfileInfoField(
-                      label: "NIM", value: user_data['nim']?.toString() ?? ""),
-                  ProfileInfoField(
-                      label: "Jurusan", value: user_data['jurusan'] ?? ""),
-                  ProfileInfoField(
-                      label: "Program Studi", value: user_data['prodi'] ?? ""),
-                  ProfileInfoField(
-                      label: "Kelas", value: user_data['kelas'] ?? ""),
-                  ProfileInfoField(
-                      label: "No. Telephone",
-                      value: user_data['no_telp']?.toString() ?? ""),
+                  ProfileInfoField(label: "Username", value: username),
+                  ProfileInfoField(label: "Nama Lengkap", value: nama),
+                  ProfileInfoField(label: "NIP", value: nip),
                 ],
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                idController.text = user_data['mahasiswa_id'].toString();
-                nameController.text = user_data['mahasiswa_nama'];
-                usernameController.text = user_data['username'];
-                phoneController.text = user_data['no_telp'].toString();
+                _idController.text = userId;
                 _showEditProfileDialog(context);
-                fetchProfileData;
               },
               child: const Text("Ubah Profil"),
             ),
             ElevatedButton(
               onPressed: () {
-                idController.text = user_data['mahasiswa_id'].toString();
+                _idController.text = userId;
                 _showEditPasswordDialog(context);
-                fetchProfileData;
               },
               child: const Text("Ubah Password"),
             ),
@@ -158,23 +123,6 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
               onPressed: () => _logout(context),
               child: const Text("Log out"),
             ),
-            // MaterialButton(
-            //   color: Colors.grey,
-            //   height: 40,
-            //   minWidth: 100,
-            //   onPressed: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //           builder: (context) =>
-            //               ProfilePage(token: user_data['mahasiswa_id'])),
-            //     );
-            //   },
-            //   child: const Text(
-            //     "Refresh Data",
-            //     style: TextStyle(color: Colors.white),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -185,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return const EditProfileDialog();
+        return EditProfileDialog(token: widget.token, id: widget.id);
       },
     );
   }
@@ -194,14 +142,17 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return const EditPasswordDialog();
+        return EditPasswordDialog(token: widget.token, id: widget.id);
       },
     );
   }
 
   void _logout(BuildContext context) {
     // Handle logout logic here
-    Navigator.of(context).pushReplacementNamed('/login');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
   }
 }
 
@@ -225,7 +176,7 @@ class ProfileInfoField extends StatelessWidget {
           const SizedBox(height: 5),
           Text(
             value,
-            style: const TextStyle(fontSize: 14, color: Colors.black54),
+            style: const TextStyle(fontSize: 16, color: Colors.black54),
           ),
         ],
       ),
@@ -234,7 +185,15 @@ class ProfileInfoField extends StatelessWidget {
 }
 
 class EditProfileDialog extends StatelessWidget {
-  const EditProfileDialog({super.key});
+  String token;
+  String id;
+
+  EditProfileDialog({super.key, required this.token, required this.id});
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final DosenController _dosenController =
+      DosenController(Config.dosen_update_profile_endpoint);
 
   @override
   Widget build(BuildContext context) {
@@ -244,16 +203,16 @@ class EditProfileDialog extends StatelessWidget {
         child: Column(
           children: [
             TextField(
-              controller: nameController,
+              controller: _nameController,
               decoration: const InputDecoration(labelText: 'Nama Lengkap'),
+              minLines: 1,
+              maxLength: 50,
             ),
             TextField(
-              controller: usernameController,
+              controller: _usernameController,
               decoration: const InputDecoration(labelText: 'Username'),
-            ),
-            TextField(
-              controller: phoneController,
-              decoration: const InputDecoration(labelText: 'No Telepon'),
+              minLines: 1,
+              maxLength: 20,
             ),
           ],
         ),
@@ -268,16 +227,19 @@ class EditProfileDialog extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             print("object");
-            if (idController == "" ||
-                usernameController == "" ||
-                nameController == "" ||
-                phoneController == "") {
-              print("zero");
-            } else {
-              updateProfileData(idController.text, usernameController.text,
-                  nameController.text, phoneController.text);
+            if (_usernameController.text == "" || _nameController.text == "") {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Inputan masih kosong')),
+              );
               Navigator.of(context).pop();
-              AppLifecycleState.resumed;
+            } else {
+              _dosenController.updateProfileData(token, _idController.text,
+                  _usernameController.text, _nameController.text);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileDosen(token: token, id: id)),
+              );
             }
           },
           child: const Text("Ubah"),
@@ -288,7 +250,16 @@ class EditProfileDialog extends StatelessWidget {
 }
 
 class EditPasswordDialog extends StatelessWidget {
-  const EditPasswordDialog({super.key});
+  String token;
+  String id;
+
+  EditPasswordDialog({super.key, required this.token, required this.id});
+
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final DosenController _dosenController =
+      DosenController(Config.dosen_update_password_endpoint);
 
   @override
   Widget build(BuildContext context) {
@@ -298,15 +269,19 @@ class EditPasswordDialog extends StatelessWidget {
         child: Column(
           children: [
             TextField(
-              controller: passwordController,
+              controller: _passwordController,
               decoration: const InputDecoration(labelText: 'Password Baru'),
               obscureText: true,
+              minLines: 1,
+              maxLength: 20,
             ),
             TextField(
-              controller: confirmPasswordController,
+              controller: _confirmPasswordController,
               decoration:
                   const InputDecoration(labelText: 'Konfirmasi Password Baru'),
               obscureText: true,
+              minLines: 1,
+              maxLength: 20,
             ),
           ],
         ),
@@ -321,60 +296,31 @@ class EditPasswordDialog extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             print("object");
-            if (idController == "" || passwordController == "") {
-              print("zero");
-            } else {
-              updatePassword(idController.text, passwordController.text);
+            if (_passwordController.text == "") {
               Navigator.of(context).pop();
-              AppLifecycleState.resumed;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Inputan masih kosong')),
+              );
+            } else if (_passwordController.text !=
+                _confirmPasswordController.text) {
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('Konfirmasi password tidak sesuai')),
+              );
+            } else {
+              _dosenController.updatePassword(
+                  token, _idController.text, _passwordController.text);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileDosen(token: token, id: id)),
+              );
             }
           },
           child: const Text("Ubah"),
         ),
       ],
     );
-  }
-}
-
-/// 2. Update Profile Data Function
-void updateProfileData(
-    String id, String username, String name, String noTelepon) async {
-  try {
-    Response response;
-    response = await dio.post(
-      url_update_data,
-      queryParameters: {
-        'mahasiswa_id': id,
-        'username': username,
-        'mahasiswa_nama': name,
-        'no_telp': noTelepon,
-      },
-    );
-    idController.text = "";
-    usernameController.text = "";
-    nameController.text = "";
-    phoneController.text = "";
-    print("Profile updated: ${response.data}");
-  } catch (e) {
-    print("Error updating profile data: $e");
-  }
-}
-
-/// 3. Update Password Function
-void updatePassword(String id, String newPassword) async {
-  try {
-    Response response = await dio.post(
-      url_update_pass, // Replace with your actual Laravel controller URL
-      queryParameters: {
-        'mahasiswa_id': id,
-        'password': newPassword,
-      },
-    );
-    // Clear the password field after successful update
-    idController.text = "";
-    passwordController.text = "";
-    print("Password updated: ${response.data}");
-  } catch (e) {
-    print("Error updating password: $e");
   }
 }

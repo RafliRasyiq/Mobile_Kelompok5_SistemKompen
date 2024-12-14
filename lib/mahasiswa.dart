@@ -24,7 +24,7 @@ class _MahasiswaPageState extends State<MahasiswaPage> {
     // Inisialisasi halaman dengan token
     _pages = [
       DashboardMahasiswa(token: widget.token, id:widget.id ),
-      ProfilePage(token: widget.token, id:widget.id)
+      ProfileMahasiswa(token: widget.token, id:widget.id)
       //   Dashboard(token: widget.token), // Pass token ke Dashboard
       //   HistoryPage(),
       //   NotificationPage(),

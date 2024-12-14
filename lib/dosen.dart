@@ -26,7 +26,7 @@ class _DosenPageState extends State<DosenPage> {
     // Inisialisasi halaman dengan token
     _pages = [
       DashboardDosen(token: widget.token, id: widget.id),
-      ProfilePage(token: widget.token, id: widget.id),
+      ProfileDosen(token: widget.token, id: widget.id),
       KompenMahasiswaPage(token: widget.token),
       MahasiswaAlphaPagge(token: widget.token)
       //   Dashboard(token: widget.token), // Pass token ke Dashboard

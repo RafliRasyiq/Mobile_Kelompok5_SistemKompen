@@ -7,8 +7,18 @@ class Config {
 
   //Endpoint get User Data
   static const String mahasiswa_endpoint = '$base_domain/api/mahasiswa/mahasiswa_data';
+  static const String mahasiswa_update_profile_endpoint = '$base_domain/api/mahasiswa/edit_profile';
+  static const String mahasiswa_update_password_endpoint = '$base_domain/api/mahasiswa/edit_password';
+
+
   static const String dosen_endpoint = '$base_domain/api/dosen/dosen_data';
+  static const String dosen_update_profile_endpoint = '$base_domain/api/dosen/edit_profile';
+  static const String dosen_update_password_endpoint = '$base_domain/api/dosen/edit_password';
+
+
   static const String tendik_endpoint = '$base_domain/api/tendik/tendik_data';
+  static const String tendik_update_profile_endpoint = '$base_domain/api/tendik/edit_profile';
+  static const String tendik_update_password_endpoint = '$base_domain/api/tendik/edit_password';
 
 
   static const String list_mhs_kompen_endpoint = '$base_domain/api/kompen/list_mhs_kompen';

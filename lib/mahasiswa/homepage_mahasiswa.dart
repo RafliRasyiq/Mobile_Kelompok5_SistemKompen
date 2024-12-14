@@ -360,7 +360,7 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ProfilePage(token: tokens, id: user_id)),
+              builder: (context) => ProfileMahasiswa(token: tokens, id: user_id)),
         );
         break;
       case 2:

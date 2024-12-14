@@ -35,13 +35,13 @@ class _DashboardDosenState extends State<DashboardDosen> {
     try {
       // Ambil token dari SharedPreferences jika diperlukan
       final token = await Sharedpref.getToken();
-      final dosenId = await Sharedpref.getUserId();
+      final userId = await Sharedpref.getUserId();
 
       if (token == '') {
         throw Exception('Token is missing');
       }
 
-      final data = await DosenController.profile(token, dosenId);
+      final data = await DosenController.profile(token, userId);
 
       setState(() {
         tokens = token;
@@ -379,7 +379,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ProfilePage(token: tokens, id: user_id)),
+              builder: (context) => ProfileDosen(token: tokens, id: user_id)),
         );
         break;
       case 2:

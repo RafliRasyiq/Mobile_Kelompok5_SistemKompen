@@ -32,16 +32,28 @@ class MahasiswaController {
         print("bagian ini sudah masuk");
         if (data['message'] == 'success') {
           final userId = data['user_id'].toString();
+          final username = data['username'];
           final nama = data['mahasiswa_nama'];
           final nim = data['nim'].toString();
+          final foto = data['foto'];
+          final jurusan = data['jurusan'];
+          final prodi = data['prodi'];
+          final kelas = data['kelas'];
+          final no_telp = data['no_telp'];
           print("$data");
           print("$nama");
           // Kembalikan semua data dari respons JSON
           return {
             'success': true,
             'user_id': userId,
+            'username': username,
             'nama': nama,
             'nim': nim,
+            'foto': '$foto',
+            'jurusan': jurusan,
+            'prodi': prodi,
+            'kelas': kelas,
+            'no_telp': no_telp,
             'message': "Data telah ditemukan"
           };
         } else {
@@ -62,5 +74,64 @@ class MahasiswaController {
       'success': false,
       'message': 'An error occurred: $e',
     };
+  }
+
+  Future<Map<String, dynamic>> updateProfileData(
+      String token, String id, String username, String nama, String no_telp) async {
+    final url = Uri.parse(Config.mahasiswa_update_profile_endpoint);
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'id': id,
+          'username': username,
+          'nama': nama,
+          'no_telp': no_telp,
+        }),
+      );
+      print("Profile updated: ${response.body}");
+      final data = jsonDecode(response.body);
+      return {
+          'success': true,
+          'data': data,
+        };
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'An error occurred: $e',
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> updatePassword(String token, String id, String password) async {
+    final url = Uri.parse(Config.mahasiswa_update_password_endpoint);
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'id': id,
+          'password': password,
+        }),
+      );
+      print("Profile updated: ${response.body}");
+      final data = jsonDecode(response.body);
+      return {
+          'success': true,
+          'data': data,
+        };
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'An error occurred: $e',
+      };
+    }
   }
 }

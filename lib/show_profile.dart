@@ -39,12 +39,6 @@ class _ProfilePageState extends State<ShowProfilePage>
     fetchProfileData(widget.mahasiswaId); // Use the provided ID
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
   void fetchProfileData(String id) async {
     try {
       final response = await dio.post(
@@ -77,7 +71,7 @@ class _ProfilePageState extends State<ShowProfilePage>
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/daftarAlpha');
+            Navigator.of(context).pop();
           },
         ),
       ),
