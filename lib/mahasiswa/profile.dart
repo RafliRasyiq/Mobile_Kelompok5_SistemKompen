@@ -136,7 +136,7 @@ class _ProfileMahasiswaState extends State<ProfileMahasiswa> {
                   ProfileInfoField(label: "Jurusan", value: jurusan),
                   ProfileInfoField(label: "Program Studi", value: prodi),
                   ProfileInfoField(label: "Kelas", value: kelas),
-                  ProfileInfoField(label: "No. Telephone", value: noTelp),
+                  ProfileInfoField(label: "No. Telepon", value: noTelp),
                 ],
               ),
             ),

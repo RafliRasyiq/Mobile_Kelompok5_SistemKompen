@@ -7,6 +7,7 @@ import 'package:sistem_kompen/kompen/daftar_mhs_kompen.dart';
 import 'package:sistem_kompen/login/login.dart';
 import 'package:sistem_kompen/core/shared_prefix.dart';
 import 'package:sistem_kompen/dosen/profile.dart';
+import 'package:sistem_kompen/dosen/update_kompen_selesai.dart';
 
 class DashboardDosen extends StatefulWidget {
   final String token;
@@ -173,7 +174,8 @@ class _DashboardDosenState extends State<DashboardDosen> {
                               value: 0,
                               child: ListTile(
                                 leading: Icon(Icons.person),
-                                title: Text('$nama\n$nip'),
+                                title: Text(nama,maxLines: 1,overflow: TextOverflow.ellipsis),
+                                subtitle: Text(nip,maxLines: 1,overflow: TextOverflow.ellipsis),
                               ),
                             ),
                             PopupMenuDivider(),
@@ -222,7 +224,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
                 ),
                 // Profile Information
                 Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 85),
+                  padding: const EdgeInsets.only(left: 16, top: 85, right: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -233,6 +235,8 @@ class _DashboardDosenState extends State<DashboardDosen> {
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis
                       ),
                       Text(
                         nip,
@@ -416,6 +420,13 @@ class _DashboardDosenState extends State<DashboardDosen> {
           context,
           MaterialPageRoute(
               builder: (context) => KompenMahasiswaPage(token: tokens)),
+        );
+        break;
+      case 5:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DataListScreen(token: tokens)),
         );
         break;
     }

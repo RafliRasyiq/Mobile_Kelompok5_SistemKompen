@@ -84,8 +84,9 @@ class _DetailAlphaPageState extends State<DetailMahasiswaAlpha> {
           ),
           textAlign: TextAlign.center,
         ),
+        backgroundColor: const Color(0xFF2D2766),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -186,7 +187,7 @@ class _DetailAlphaPageState extends State<DetailMahasiswaAlpha> {
                 ],
               ),
             ),
-            const SizedBox(height: 60),
+            const SizedBox(height: 30),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -197,7 +198,7 @@ class _DetailAlphaPageState extends State<DetailMahasiswaAlpha> {
                   ProfileInfoField(label: "Jurusan", value: jurusan),
                   ProfileInfoField(label: "Program Studi", value: prodi),
                   ProfileInfoField(label: "Kelas", value: kelas),
-                  ProfileInfoField(label: "No. Telephone", value: noTelp),
+                  ProfileInfoField(label: "No. Telepon", value: noTelp),
                 ],
               ),
             ),

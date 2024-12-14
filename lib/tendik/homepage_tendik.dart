@@ -171,7 +171,8 @@ class _DashboardTendikState extends State<DashboardTendik> {
                               value: 0,
                               child: ListTile(
                                 leading: Icon(Icons.person),
-                                title: Text('$nama\n$noInduk'),
+                                title: Text(nama,maxLines: 1,overflow: TextOverflow.ellipsis),
+                                subtitle: Text(noInduk,maxLines: 1,overflow: TextOverflow.ellipsis),
                               ),
                             ),
                             PopupMenuDivider(),
@@ -220,7 +221,7 @@ class _DashboardTendikState extends State<DashboardTendik> {
                 ),
                 // Profile Information
                 Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 85),
+                  padding: const EdgeInsets.only(left: 16, top: 85, right: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -231,6 +232,8 @@ class _DashboardTendikState extends State<DashboardTendik> {
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis
                       ),
                       Text(
                         noInduk,

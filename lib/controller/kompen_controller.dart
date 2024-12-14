@@ -39,9 +39,9 @@ class KompenController {
           final prodi = data['prodi'];
           final kelas = data['kelas'];
           final no_telp = data['no_telp'];
-          final alpha = data['alpha'];
-          final poin = data['poin'];
-          final status = data['status'];
+          final alpha = data['alpha'].toString();
+          final poin = data['poin'].toString();
+          final status = data['status'].toString();
           print("$data");
           print("$nama");
           // Kembalikan semua data dari respons JSON
