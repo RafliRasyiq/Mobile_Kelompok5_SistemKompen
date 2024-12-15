@@ -19,6 +19,8 @@ class _AlphaMahasiswaState extends State<MahasiswaAlphaPagge> {
   final TextEditingController idMahasiswaAlpha = TextEditingController();
   var all_data = [];
 
+  String searchQuery = "";
+
   @override
   void initState() {
     super.initState();
@@ -70,8 +72,19 @@ class _AlphaMahasiswaState extends State<MahasiswaAlphaPagge> {
     }
   }
 
+  List<dynamic> getFilteredData() {
+    if (searchQuery.isEmpty) {
+      return all_data; // Return all data if no search query
+    }
+    return all_data.where((item) {
+      String nama = item['mahasiswa_nama'].toLowerCase();
+      return nama.contains(searchQuery.toLowerCase());
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<dynamic> filteredData = getFilteredData();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Daftar Mahasiswa Alpha'),
@@ -99,8 +112,13 @@ class _AlphaMahasiswaState extends State<MahasiswaAlphaPagge> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   filled: true,
-                  fillColor: Colors.white, // Search bar background color
+                  fillColor: Colors.white,
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    searchQuery = value; // Update the search query
+                  });
+                },
               ),
             ),
             const SizedBox(height: 10),
@@ -165,14 +183,14 @@ class _AlphaMahasiswaState extends State<MahasiswaAlphaPagge> {
                             ),
                             // Scrollable table body
                             Expanded(
-                              child: all_data.isEmpty
+                              child: filteredData.isEmpty
                                   ? const Center(
                                       child: Text(
                                           "Tidak ada data yang ditampilkan"))
                                   : ListView.builder(
-                                      itemCount: all_data.length,
+                                      itemCount: filteredData.length,
                                       itemBuilder: (context, index) {
-                                        final row = all_data[index];
+                                        final row = filteredData[index];
                                         return Container(
                                           decoration: BoxDecoration(
                                               border: Border.all(
@@ -206,7 +224,10 @@ class _AlphaMahasiswaState extends State<MahasiswaAlphaPagge> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            DetailMahasiswaAlpha(token: widget.token, id: id),
+                                                            DetailMahasiswaAlpha(
+                                                                token: widget
+                                                                    .token,
+                                                                id: id),
                                                       ),
                                                     );
                                                   },
