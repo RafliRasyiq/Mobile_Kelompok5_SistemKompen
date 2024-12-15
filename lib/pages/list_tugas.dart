@@ -1,118 +1,108 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sistem_kompen/pages/deskripsi_tugas.dart';
-
-final dio = Dio(
-  BaseOptions(
-    connectTimeout: Duration(seconds: 120),
-    receiveTimeout: Duration(seconds: 10),
-  ),
-);
-
-String urlDomain = "http://192.168.67.198:8000/";
-String urlAllData = urlDomain + "api/all_data";
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const DaftarTugas(),
-    );
-  }
-}
+import 'dart:convert';
+import 'package:sistem_kompen/config/config.dart';
+import 'package:http/http.dart' as http;
 
 class DaftarTugas extends StatefulWidget {
-  const DaftarTugas({super.key});
+  final String token;
+
+  const DaftarTugas({super.key, required this.token});
 
   @override
   _DaftarTugasState createState() => _DaftarTugasState();
 }
 
-class _DaftarTugasState extends State<DaftarTugas> with WidgetsBindingObserver {
-  List<Map<String, dynamic>> allData = [];
+class _DaftarTugasState extends State<DaftarTugas> {
+  var allData = [];
+
+  String searchQuery = "";
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _showAllData(); // Load data on initialization
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _showAllData(); // Reload data when app resumes
-    }
-  }
-
   void _showAllData() async {
+    final url = Uri.parse(Config.list_tugas_mahasiswa_endpoint);
     try {
-      final response = await dio.post(urlAllData);
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${widget.token}',
+        },
+      );
 
-      if (response.data is List) {
-        setState(() {
-          allData = (response.data as List).map((item) {
-            return {
-              'id': item['tugas_id']?.toString() ?? '',
-              'title': item['tugas_nama']?.toString() ?? '',
-              'description': item['deskripsi']?.toString() ?? '',
-              'lecturer': item['nama']?.toString() ?? '',
-              'type': item['jenis_nama']?.toString() ?? '',
-              'period': item['periode_nama']?.toString() ?? '',
-              'weight': item['tugas_bobot']?.toString() ?? '',
-              'due': item['tugas_tenggat']?.toString() ?? '',
-              'quota': item['kuota']?.toString() ?? '',
-              'image': 'assets/task/task-1.jpg', // Placeholder
-            };
-          }).toList();
-        });
+      print('Response status: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success']) {
+          print(data['data']);
+          setState(() {
+            allData = (data['data'] as List).map((item) {
+              return {
+                'id': item['tugas_id']?.toString() ?? '',
+                'title': item['tugas_nama']?.toString() ?? '',
+                'description': item['deskripsi']?.toString() ?? '',
+                'lecturer': item['user']['nama']?.toString() ?? '',
+                'type': item['jenis']['jenis_nama']?.toString() ?? '',
+                'period': item['periode']['periode_tahun']?.toString() ?? '',
+                'weight': item['tugas_bobot']?.toString() ?? '',
+                'due': item['tugas_tenggat']?.toString() ?? '',
+                'quota': item['kuota']?.toString() ?? '', // Placeholder
+              };
+            }).toList();
+          });
+        } else {
+          print("Daftar tugas tidak ditemukan: ${response.body}");
+          setState(() {
+            allData = [];
+          });
+        }
       } else {
-        print("Unexpected data format: ${response.data}");
+        print("Unexpected data format: ${response.body}");
+        setState(() {
+          allData = [];
+        });
       }
     } catch (e) {
       print("Error loading data: $e");
     }
   }
 
+  List<dynamic> getFilteredData() {
+    if (searchQuery.isEmpty) {
+      return allData; // Return all data if no search query
+    }
+    return allData.where((item) {
+      String nama = item['title'].toLowerCase();
+      return nama.contains(searchQuery.toLowerCase());
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<dynamic> filteredData = getFilteredData();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 42, 6, 127),
         title: const Text(
           'DAFTAR TUGAS',
           style: TextStyle(
-            fontSize: 24,
             color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.account_circle,
-              color: Colors.white,
-            ),
-            onPressed: () {},
-          ),
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: Stack(
         children: [
@@ -162,125 +152,122 @@ class _DaftarTugasState extends State<DaftarTugas> with WidgetsBindingObserver {
                             ),
                           ],
                         ),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.filter_list,
-                            size: 30,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {}, // Implement filtering if needed
-                        ),
                       ),
-                      const SizedBox(width: 10),
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
                             hintText: 'Cari...',
-                            suffixIcon: const Icon(Icons.search),
+                            prefixIcon: const Icon(Icons.search),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
                             filled: true,
                             fillColor: Colors.white,
                           ),
+                          onChanged: (value) {
+                            setState(() {
+                              searchQuery = value; // Update the search query
+                            });
+                          },
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: allData.length,
-                      itemBuilder: (context, index) {
-                        final task = allData[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    TaskDetailScreen(task: task),
-                              ),
-                            );
-                          },
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            margin: const EdgeInsets.symmetric(vertical: 10),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.asset(
-                                      task['image'],
-                                      height: 70,
-                                      width: 70,
-                                      fit: BoxFit.cover,
+                    child: filteredData.isEmpty
+                        ? const Center(
+                            child: Text("Tidak ada data yang ditampilkan"))
+                        : ListView.builder(
+                            itemCount: filteredData.length,
+                            itemBuilder: (filteredData, index) {
+                              final task = allData[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => TaskDetailScreen(
+                                        task: task,
+                                        token: widget.token,
+                                        mahasiswaId:
+                                            '12345', // Ganti dengan ID mahasiswa yang sedang login
+                                      ),
                                     ),
+                                  );
+                                },
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(14.0),
+                                    child: Row(
                                       children: [
-                                        Text(
-                                          task['title'],
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          task['description'],
-                                          style: const TextStyle(fontSize: 12),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              task['lecturer'],
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey),
-                                            ),
-                                            Text(
-                                              'Type: ${task['type']}',
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey),
-                                            ),
-                                            Text(
-                                              'Quota: ${task['quota']}',
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          'Due: ${task['due']}',
-                                          style: const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.redAccent),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                task['title'],
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                task['description'],
+                                                style: const TextStyle(
+                                                    fontSize: 12),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    task['lecturer'],
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.grey),
+                                                  ),
+                                                  Text(
+                                                    'Jenis: ${task['type']}',
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.grey),
+                                                    textAlign: TextAlign.left,
+                                                  ),
+                                                  Text(
+                                                    'Kuota: ${task['quota']}',
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.grey),
+                                                  ),
+                                                ],
+                                              ),
+                                              Text(
+                                                'Tenggat: ${task['due']}',
+                                                style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.redAccent),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
                   ),
                 ],
               ),

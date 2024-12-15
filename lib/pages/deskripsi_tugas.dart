@@ -1,17 +1,66 @@
 import 'package:flutter/material.dart';
-import 'kumpulkan_tugas.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class TaskDetailScreen extends StatelessWidget {
   final Map<String, dynamic> task;
+  final String token; // Token untuk autentikasi
+  final String mahasiswaId; // ID mahasiswa yang sedang login
 
-  const TaskDetailScreen({super.key, required this.task});
+  const TaskDetailScreen({
+    super.key,
+    required this.task,
+    required this.token,
+    required this.mahasiswaId,
+  });
+
+  Future<void> ambilTugas(BuildContext context) async {
+    final url = Uri.parse(
+        'https://your-api-endpoint/t_pengumpulan_tugas'); // Ganti dengan URL API Anda
+
+    final body = {
+      'tugas_id': task['id'],
+      'mahasiswa_id': mahasiswaId,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token', // Token autentikasi
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text('Tugas berhasil diambil: ${responseData['message']}')),
+        );
+      } else {
+        final responseData = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text('Gagal mengambil tugas: ${responseData['message']}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFF2D2766),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
@@ -32,21 +81,11 @@ class TaskDetailScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.account_circle,
-              color: Colors.white,
-              size: 33,
-            ),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/background/bg-1.png'),
+            image: AssetImage('assets/background/bg-2.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -129,14 +168,7 @@ class TaskDetailScreen extends StatelessWidget {
                           const Spacer(),
                           Center(
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const KumpulkanTugas()),
-                                );
-                              },
+                              onPressed: () => ambilTugas(context),
                               style: ElevatedButton.styleFrom(
                                 minimumSize: const Size(340, 59),
                                 backgroundColor: const Color(0xFF8278AB),
@@ -153,18 +185,6 @@ class TaskDetailScreen extends StatelessWidget {
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20.0),
-                        child: Image.asset(
-                          task['image'],
-                          width: 181,
-                          height: 143,
-                          fit: BoxFit.cover,
-                        ),
                       ),
                     ),
                   ],
