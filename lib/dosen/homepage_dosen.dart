@@ -8,6 +8,7 @@ import 'package:sistem_kompen/login/login.dart';
 import 'package:sistem_kompen/core/shared_prefix.dart';
 import 'package:sistem_kompen/dosen/profile.dart';
 import 'package:sistem_kompen/dosen/update_kompen_selesai.dart';
+import 'package:sistem_kompen/dosen/list_tugas.dart';
 
 class DashboardDosen extends StatefulWidget {
   final String token;
@@ -406,7 +407,11 @@ class _DashboardDosenState extends State<DashboardDosen> {
         );
         break;
       case 2:
-        // Handle Logout action
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DaftarTugas(token: tokens)),
+        );
         break;
       case 3:
         Navigator.push(

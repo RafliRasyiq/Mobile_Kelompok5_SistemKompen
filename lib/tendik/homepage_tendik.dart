@@ -6,6 +6,7 @@ import 'package:sistem_kompen/kompen/daftar_mhs_alpha.dart';
 import 'package:sistem_kompen/kompen/daftar_mhs_kompen.dart';
 import 'package:sistem_kompen/login/login.dart';
 import 'package:sistem_kompen/core/shared_prefix.dart';
+import 'package:sistem_kompen/tendik/list_tugas.dart';
 import 'package:sistem_kompen/tendik/profile.dart';
 import 'package:sistem_kompen/tendik/update_kompen_selesai.dart';
 
@@ -405,7 +406,11 @@ class _DashboardTendikState extends State<DashboardTendik> {
         );
         break;
       case 2:
-        // Handle Logout action
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DaftarTugas(token: tokens)),
+        );
         break;
       case 3:
         Navigator.push(

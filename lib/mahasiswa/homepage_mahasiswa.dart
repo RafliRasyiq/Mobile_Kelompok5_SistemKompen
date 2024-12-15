@@ -6,6 +6,7 @@ import 'package:sistem_kompen/login/login.dart';
 import 'package:sistem_kompen/core/shared_prefix.dart';
 import 'package:sistem_kompen/mahasiswa/profile.dart';
 import 'package:sistem_kompen/mahasiswa/update_kompen_selesai.dart';
+import 'package:sistem_kompen/tugas/list_tugas.dart';
 
 class DashboardMahasiswa extends StatefulWidget {
   final String token;
@@ -388,7 +389,11 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
         );
         break;
       case 2:
-        // Handle Logout action
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DaftarTugas(token: tokens)),
+        );
         break;
         case 4:
         Navigator.push(
