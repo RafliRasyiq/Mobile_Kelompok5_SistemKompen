@@ -35,6 +35,8 @@ class Config {
   static const String list_mhs_alpha_endpoint = '$base_domain/api/alpha/all_data';
   static const String show_mhs_alpha_endpoint = '$base_domain/api/alpha/show_data';
 
+  static const String jenis_periode_tugas_endpoint = '$base_domain/api/tugas/jenis_periode_data';
+  static const String tambah_tugas_endpoint = '$base_domain/api/tugas/tambah_tugas';
   static const String list_tugas_dosenTendik_endpoint = '$base_domain/api/tugas/tugas_data';
   static const String list_tugas_mahasiswa_endpoint = '$base_domain/api/tugas/all_tugas_data';
 }

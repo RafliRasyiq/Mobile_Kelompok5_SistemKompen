@@ -409,7 +409,7 @@ class _DashboardTendikState extends State<DashboardTendik> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => DaftarTugas(token: tokens)),
+              builder: (context) => DaftarTugas(token: tokens, id: user_id)),
         );
         break;
       case 3:

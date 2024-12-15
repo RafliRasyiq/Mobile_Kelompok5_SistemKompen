@@ -3,11 +3,14 @@ import 'package:sistem_kompen/tendik/deskripsi_tugas.dart';
 import 'dart:convert';
 import 'package:sistem_kompen/config.dart';
 import 'package:http/http.dart' as http;
+import 'package:sistem_kompen/tendik/homepage_tendik.dart';
+import 'package:sistem_kompen/tendik/tambahTugas.dart';
 
 class DaftarTugas extends StatefulWidget {
   final String token;
+  final String id;
 
-  const DaftarTugas({super.key, required this.token});
+  const DaftarTugas({super.key, required this.token, required this.id});
 
   @override
   _DaftarTugasState createState() => _DaftarTugasState();
@@ -100,7 +103,11 @@ class _DaftarTugasState extends State<DaftarTugas> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DashboardTendik(token: widget.token, id: widget.id,)),
+            );
           },
         ),
       ),
@@ -271,6 +278,18 @@ class _DaftarTugasState extends State<DaftarTugas> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TambahTugas(token: widget.token, id: widget.id)),
+          );
+        },
+        backgroundColor: const Color(0xFFFFFFFF),
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
