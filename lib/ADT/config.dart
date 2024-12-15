@@ -10,6 +10,12 @@ final dio = Dio(BaseOptions(
 ));
 
 String urlDomain = "http://192.168.1.8:8000/";
-String urlAllData = urlDomain + "api/all_data";
-String urlShowData = urlDomain + "api/show_data";
-String urlUpdateStatus = urlDomain + "api/update_status";
+//String urlAllData = urlDomain + "api/all_data";
+//String urlShowData = urlDomain + "api/show_data";
+//String urlUpdateStatus = urlDomain + "api/update_status";
+
+
+String urlAllData = urlDomain + "api/all_data_p";
+String urlShowData = urlDomain + "api/show_data_p";
+String urlUpdateStatus = urlDomain + "api/update_data_p";
+
