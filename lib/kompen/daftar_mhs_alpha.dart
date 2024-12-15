@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:sistem_kompen/kompen/detail_mhs_alpha.dart';
 import 'dart:convert';
@@ -149,8 +147,8 @@ class _AlphaMahasiswaState extends State<MahasiswaAlphaPagge> {
                                       color: const Color(0xFFEEEEEE)),
                                   color: const Color(0xFFEEEEEE)),
                               padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: const [
+                              child: const Row(
+                                children: [
                                   Expanded(
                                     flex: 5,
                                     child: Text(

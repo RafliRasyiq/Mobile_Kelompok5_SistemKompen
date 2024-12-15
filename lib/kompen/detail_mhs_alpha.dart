@@ -115,8 +115,7 @@ class _DetailAlphaPageState extends State<DetailMahasiswaAlpha> {
                     radius: 50,
                     backgroundImage: foto.isNotEmpty
                         ? NetworkImage("$url/$foto")
-                        : const AssetImage('assets/images/default_profile.png')
-                            as ImageProvider,
+                        : const AssetImage('assets/images/default_profile.png'),
                   ),
                 ),
               ],
