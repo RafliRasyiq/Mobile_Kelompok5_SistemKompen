@@ -122,6 +122,7 @@ class _DashboardTendikState extends State<DashboardTendik> {
       });
     }
   }
+
   var searchQuery = "";
 
   List<dynamic> getFilteredData() {
@@ -136,7 +137,7 @@ class _DashboardTendikState extends State<DashboardTendik> {
 
   @override
   Widget build(BuildContext context) {
-        List<dynamic> filteredData = getFilteredData();
+    List<dynamic> filteredData = getFilteredData();
     return Scaffold(
       body: Stack(
         children: [
@@ -151,198 +152,206 @@ class _DashboardTendikState extends State<DashboardTendik> {
           ),
           // Foreground content
           SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFF2D2766), // Ensure no white overlay
-              ),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF2D2766), // Ensure no white overlay
+                  ),
+                  child: SafeArea(
+                    child: Column(
                       children: [
-                        PopupMenuButton<int>(
-                          icon: const Icon(Icons.menu_rounded,
-                              color: Colors.white),
-                          onSelected: (item) => onSelectedMenu(context, item),
-                          itemBuilder: (context) => [
-                            PopupMenuItem<int>(
-                              value: 0,
-                              child: ListTile(
-                                leading: Icon(Icons.menu_open_rounded),
-                                title: Text('Menu'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            PopupMenuButton<int>(
+                              icon: const Icon(Icons.menu_rounded,
+                                  color: Colors.white),
+                              onSelected: (item) =>
+                                  onSelectedMenu(context, item),
+                              itemBuilder: (context) => [
+                                PopupMenuItem<int>(
+                                  value: 0,
+                                  child: ListTile(
+                                    leading: Icon(Icons.menu_open_rounded),
+                                    title: Text('Menu'),
+                                  ),
+                                ),
+                                PopupMenuDivider(),
+                                PopupMenuItem<int>(
+                                  value: 1,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.home_rounded,
+                                          color: Colors.black),
+                                      const SizedBox(width: 15),
+                                      Text('Home'),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem<int>(
+                                  value: 2,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.add_to_photos,
+                                          color: Colors.black),
+                                      const SizedBox(width: 15),
+                                      Text('Manage Kompen'),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem<int>(
+                                  value: 3,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.list_rounded,
+                                          color: Colors.black),
+                                      const SizedBox(width: 15),
+                                      Text('Daftar Mahasiswa Alpha'),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem<int>(
+                                  value: 4,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.list_rounded,
+                                          color: Colors.black),
+                                      const SizedBox(width: 15),
+                                      Text('Daftar Mahasiswa Kompen'),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem<int>(
+                                  value: 5,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.domain_verification_outlined,
+                                          color: Colors.black),
+                                      const SizedBox(width: 15),
+                                      Text('Update Kompen Selesai'),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem<int>(
+                                  value: 6,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.document_scanner_rounded,
+                                          color: Colors.black),
+                                      const SizedBox(width: 15),
+                                      Text('Cek Validasi QR'),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Center(
+                              child: Text(
+                                'HOME',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    backgroundColor: Colors.transparent),
                               ),
                             ),
-                            PopupMenuDivider(),
-                            PopupMenuItem<int>(
-                              value: 1,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.home_rounded, color: Colors.black),
-                                  const SizedBox(width: 15),
-                                  Text('Home'),
-                                ],
-                              ),
-                            ),
-                            PopupMenuItem<int>(
-                              value: 2,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.add_to_photos,
-                                      color: Colors.black),
-                                  const SizedBox(width: 15),
-                                  Text('Manage Kompen'),
-                                ],
-                              ),
-                            ),
-                            PopupMenuItem<int>(
-                              value: 3,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.list_rounded, color: Colors.black),
-                                  const SizedBox(width: 15),
-                                  Text('Daftar Mahasiswa Alpha'),
-                                ],
-                              ),
-                            ),
-                            PopupMenuItem<int>(
-                              value: 4,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.list_rounded, color: Colors.black),
-                                  const SizedBox(width: 15),
-                                  Text('Daftar Mahasiswa Kompen'),
-                                ],
-                              ),
-                            ),
-                            PopupMenuItem<int>(
-                              value: 5,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.domain_verification_outlined,
-                                      color: Colors.black),
-                                  const SizedBox(width: 15),
-                                  Text('Update Kompen Selesai'),
-                                ],
-                              ),
-                            ),
-                            PopupMenuItem<int>(
-                              value: 6,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.document_scanner_rounded,
-                                      color: Colors.black),
-                                  const SizedBox(width: 15),
-                                  Text('Cek Validasi QR'),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Center(
-                          child: Text(
-                            'HOME',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                backgroundColor: Colors.transparent),
-                          ),
-                        ),
-                        PopupMenuButton<int>(
-                          icon: const Icon(Icons.person, color: Colors.white),
-                          onSelected: (item) => onSelected(context, item),
-                          itemBuilder: (context) => [
-                            PopupMenuItem<int>(
-                              value: 0,
-                              child: ListTile(
-                                leading: Icon(Icons.person),
-                                title: Text(nama,maxLines: 1,overflow: TextOverflow.ellipsis),
-                                subtitle: Text(noInduk,maxLines: 1,overflow: TextOverflow.ellipsis),
-                              ),
-                            ),
-                            PopupMenuDivider(),
-                            PopupMenuItem<int>(
-                              value: 1,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.contact_phone_rounded, color: Colors.black),
-                                  const SizedBox(width: 15),
-                                  Text('Profile'),
-                                ],
-                              ),
-                            ),
-                            PopupMenuItem<int>(
-                              value: 2,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.logout, color: Colors.black),
-                                  const SizedBox(width: 15),
-                                  Text('Logout'),
-                                ],
-                              ),
+                            PopupMenuButton<int>(
+                              icon:
+                                  const Icon(Icons.person, color: Colors.white),
+                              onSelected: (item) => onSelected(context, item),
+                              itemBuilder: (context) => [
+                                PopupMenuItem<int>(
+                                  value: 0,
+                                  child: ListTile(
+                                    leading: Icon(Icons.person),
+                                    title: Text(nama,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis),
+                                    subtitle: Text(noInduk,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis),
+                                  ),
+                                ),
+                                PopupMenuDivider(),
+                                PopupMenuItem<int>(
+                                  value: 1,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.contact_phone_rounded,
+                                          color: Colors.black),
+                                      const SizedBox(width: 15),
+                                      Text('Profile'),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem<int>(
+                                  value: 2,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.logout, color: Colors.black),
+                                      const SizedBox(width: 15),
+                                      Text('Logout'),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            // Background Image and Track Record (adjusted with Stack and Positioned)
-            Stack(
-              clipBehavior: Clip
-                  .none, // to allow the overflow of the track record container
-              children: [
-                // Background Image
-                Container(
-                  height: 302, // height of the image container
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/Rectangle 9.png'),
-                      fit: BoxFit.cover,
+                // Background Image and Track Record (adjusted with Stack and Positioned)
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    // Background Image
+                    Container(
+                      height: 150, // height of the image container
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/Rectangle 9.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                // Profile Information
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 85, right: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        nama,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis
+                    // Profile Information
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 16, top: 50, right: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(nama,
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis),
+                          Text(
+                            noInduk,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white.withOpacity(0.8),
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        noInduk,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white.withOpacity(0.8),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ],
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20),
                 // Track Record Container Positioned
                 Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      children: [
-                        Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    children: [
+                      Container(
                         padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -419,6 +428,7 @@ class _DashboardTendikState extends State<DashboardTendik> {
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromRGBO(232, 120, 23, 1),
                               ),
+                              textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 5), // Space after the title
                             // Handle empty or populated data
@@ -628,11 +638,14 @@ class _DashboardTendikState extends State<DashboardTendik> {
               builder: (context) => KompenMahasiswaPage(token: tokens)),
         );
         break;
-        case 5:
+      case 5:
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => DataListScreen(token: tokens, id: widget.id,)),
+              builder: (context) => DataListScreen(
+                    token: tokens,
+                    id: widget.id,
+                  )),
         );
         break;
     }

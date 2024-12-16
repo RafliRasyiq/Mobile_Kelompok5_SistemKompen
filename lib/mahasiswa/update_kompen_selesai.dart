@@ -139,6 +139,8 @@ class _DataListScreenState extends State<DataListScreen> {
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
                                 ),
+                                maxLines: 2, // Restrict to 1 line
+                                overflow: TextOverflow.ellipsis,
                               ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

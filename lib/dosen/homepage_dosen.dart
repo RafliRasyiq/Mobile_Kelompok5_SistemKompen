@@ -434,6 +434,7 @@ class _DashboardDosenState extends State<DashboardDosen> {
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromRGBO(232, 120, 23, 1),
                               ),
+                              textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 5), // Space after the title
                             // Handle empty or populated data

@@ -106,7 +106,10 @@ class _DaftarTugasState extends State<DaftarTugas> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => DashboardTendik(token: widget.token, id: widget.id,)),
+                  builder: (context) => DashboardTendik(
+                        token: widget.token,
+                        id: widget.id,
+                      )),
             );
           },
         ),
@@ -219,6 +222,8 @@ class _DaftarTugasState extends State<DaftarTugas> {
                                                 style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 16),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                               const SizedBox(height: 4),
                                               Text(
@@ -283,7 +288,8 @@ class _DaftarTugasState extends State<DaftarTugas> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => TambahTugas(token: widget.token, id: widget.id)),
+                builder: (context) =>
+                    TambahTugas(token: widget.token, id: widget.id)),
           );
         },
         backgroundColor: const Color(0xFFFFFFFF),

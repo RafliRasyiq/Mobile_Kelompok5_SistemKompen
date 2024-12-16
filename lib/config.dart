@@ -1,6 +1,6 @@
 class Config {
   //URL dasar
-  static const String base_domain = 'http://192.168.1.3:8000';
+  static const String base_domain = 'http://192.168.0.101:8000';
 
   //Endpoint Login
   static const String login_endpoint = '$base_domain/api/login';
