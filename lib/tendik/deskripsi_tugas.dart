@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 // import 'kumpulkan_tugas.dart';
 
-class TaskDetailScreen extends StatelessWidget {
+class DeskripsiDetailScreen extends StatelessWidget {
   final Map<String, dynamic> task;
 
-  const TaskDetailScreen({super.key, required this.task});
+  const DeskripsiDetailScreen({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {

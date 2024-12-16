@@ -106,7 +106,10 @@ class _DaftarTugasState extends State<DaftarTugas> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => DashboardDosen(token: widget.token, id: widget.id,)),
+                  builder: (context) => DashboardDosen(
+                        token: widget.token,
+                        id: widget.id,
+                      )),
             );
           },
         ),
@@ -195,7 +198,7 @@ class _DaftarTugasState extends State<DaftarTugas> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          TaskDetailScreen(task: task),
+                                          DeskripsiDetailScreen(task: task),
                                     ),
                                   );
                                 },
@@ -219,6 +222,7 @@ class _DaftarTugasState extends State<DaftarTugas> {
                                                 style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 16),
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                               const SizedBox(height: 4),
                                               Text(
@@ -281,10 +285,13 @@ class _DaftarTugasState extends State<DaftarTugas> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TambahTugas(token: widget.token, id: widget.id,)),
-              );
+            context,
+            MaterialPageRoute(
+                builder: (context) => TambahTugas(
+                      token: widget.token,
+                      id: widget.id,
+                    )),
+          );
         },
         backgroundColor: const Color(0xFFFFFFFF),
         child: const Icon(Icons.add),

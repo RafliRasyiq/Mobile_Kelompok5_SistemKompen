@@ -284,43 +284,6 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
                 ),
               ],
             ),
-            // Remaining body content
-            const SizedBox(height: 100),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'Notifikasi Teratas:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            NotificationItem(
-              title: 'Tugas Bersih.... perlu ditinjau',
-              subtitle: 'Tugas 01 telah diselesaikan oleh mahasiswa.',
-              time: '20 Jam',
-            ),
-            NotificationItem(
-              title: 'Tugas Bers.... sedang dikerjakan',
-              subtitle: 'Tugas 02 telah diambil oleh mahasiswa Rafli Rasyiq.',
-              time: '20 Jam',
-            ),
-            NotificationItem(
-              title: 'Tugas Bers.... sedang dikerjakan',
-              subtitle: 'Tugas 01 telah diambil oleh mahasiswa Rafli Rasyiq.',
-              time: '20 Jam',
-            ),
-            const SizedBox(height: 10),
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/notifikasi');
-                },
-                child: const Text('Lihat Semua >>'),
-              ),
-            ),
           ],
         ),
       ),
@@ -403,62 +366,5 @@ class _DashboardMahasiswaState extends State<DashboardMahasiswa> {
         );
         break;
     }
-  }
-}
-
-class NotificationItem extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String time;
-
-  const NotificationItem({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.time,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Container(
-        padding: const EdgeInsets.all(16.0),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              subtitle,
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              time,
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
