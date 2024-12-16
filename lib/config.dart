@@ -39,4 +39,5 @@ class Config {
   static const String tambah_tugas_endpoint = '$base_domain/api/tugas/tambah_tugas';
   static const String list_tugas_dosenTendik_endpoint = '$base_domain/api/tugas/tugas_data';
   static const String list_tugas_mahasiswa_endpoint = '$base_domain/api/tugas/all_tugas_data';
+  static const String pilih_tugas_mhs_endpoint = '$base_domain/api/tugas/all_tugas_data';
 }

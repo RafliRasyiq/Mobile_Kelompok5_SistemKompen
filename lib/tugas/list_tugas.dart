@@ -188,7 +188,7 @@ class _DaftarTugasState extends State<DaftarTugas> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          TaskDetailScreen(task: task),
+                                          DetailTugas(token: widget.token, task: task, tugasId: task['id']),
                                     ),
                                   );
                                 },
