@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sistem_kompen/pages/deskripsi_tugas.dart';
+import 'package:sistem_kompen/tugas/deskripsi_tugas.dart';
 import 'dart:convert';
-import 'package:sistem_kompen/config/config.dart';
+import 'package:sistem_kompen/config.dart';
 import 'package:http/http.dart' as http;
 
 class DaftarTugas extends StatefulWidget {
@@ -187,12 +187,8 @@ class _DaftarTugasState extends State<DaftarTugas> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => TaskDetailScreen(
-                                        task: task,
-                                        token: widget.token,
-                                        mahasiswaId:
-                                            '12345', // Ganti dengan ID mahasiswa yang sedang login
-                                      ),
+                                      builder: (context) =>
+                                          DetailTugas(task: task, token: widget.token, tugasId: task['id']),
                                     ),
                                   );
                                 },
