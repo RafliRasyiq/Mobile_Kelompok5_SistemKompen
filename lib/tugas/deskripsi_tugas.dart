@@ -19,8 +19,8 @@ class DetailTugas extends StatefulWidget {
   TaskDetailScreen createState() => TaskDetailScreen();
 }
 
-
 class TaskDetailScreen extends State<DetailTugas> {
+
   @override
   void initState() {
     super.initState();
@@ -133,109 +133,113 @@ class TaskDetailScreen extends State<DetailTugas> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
-          children: [
-            const SizedBox(height: 100),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Stack(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 80.0),
-                      padding: const EdgeInsets.all(30.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20.0),
-                          topRight: Radius.circular(20.0),
+        child: SafeArea(
+          child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 100),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Stack(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 80.0),
+                        padding: const EdgeInsets.all(30.0),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20.0),
+                            topRight: Radius.circular(20.0),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 60),
+                            Center(
+                              child: Text(
+                                widget.task['title'],
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              widget.task['description'],
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w300),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              widget.task['lecturer'],
+                              style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  const TextSpan(
+                                    text: 'Poin Kompen ',
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: '${widget.task['weight']} Jam',
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF2D2766),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Deadline: ${widget.task['due']}',
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF2D2766)),
+                            ),
+                            const Spacer(),
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: () => _showConfirmationDialog(),
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size(340, 59),
+                                  backgroundColor: const Color(0xFF8278AB),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                ),
+                                child: const Text(
+                                  "Ambil Tugas",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 60),
-                          Center(
-                            child: Text(
-                              widget.task['title'],
-                              style: const TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            widget.task['description'],
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w300),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            widget.task['lecturer'],
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                const TextSpan(
-                                  text: 'Poin Kompen ',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: '${widget.task['weight']} Jam',
-                                  style: const TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFF2D2766),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Deadline: ${widget.task['due']}',
-                            style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF2D2766)),
-                          ),
-                          const Spacer(),
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: _showConfirmationDialog,
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size(340, 59),
-                                backgroundColor: const Color(0xFF8278AB),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                              ),
-                              child: const Text(
-                                "Ambil Tugas",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
+        ),
         ),
       ),
     );

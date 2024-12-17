@@ -1,6 +1,6 @@
 class Config {
   //URL dasar
-  static const String base_domain = 'http://192.168.0.101:8000';
+  static const String base_domain = 'http://192.168.1.3:8000';
 
   //Endpoint Login
   static const String login_endpoint = '$base_domain/api/login';
@@ -39,5 +39,5 @@ class Config {
   static const String tambah_tugas_endpoint = '$base_domain/api/tugas/tambah_tugas';
   static const String list_tugas_dosenTendik_endpoint = '$base_domain/api/tugas/tugas_data';
   static const String list_tugas_mahasiswa_endpoint = '$base_domain/api/tugas/all_tugas_data';
-  static const String pilih_tugas_mhs_endpoint = '$base_domain/api/tugas/all_tugas_data';
+  static const String pilih_tugas_mhs_endpoint = '$base_domain/api/tugas/pilih_tugas';
 }
